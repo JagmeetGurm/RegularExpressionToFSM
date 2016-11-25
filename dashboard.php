@@ -1,7 +1,6 @@
 <?php
-/*
-Author: Javed Ur Rehman
-Website: http://www.allphptricks.com/
+/*The login system has been derived from: 
+ Javed Ur Rehman's Website: http://www.allphptricks.com/
 */
 //session_start();
 require('db.php');
