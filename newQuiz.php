@@ -57,7 +57,7 @@ if(!empty($_SESSION['name']))
 </div>
 <?php
 $chosenQuiz=$_SESSION['quiz_no']; 
-echo "chosen: ".$chosenQuiz;
+echo "<h1>Quiz Level: ".$chosenQuiz."</h1></br></br>";
 $response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz'");?>
 
 <!--dynamically generate questions-->
@@ -126,10 +126,11 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
       $t=$result['ques_id'];
 	//echo $t;
 		$_SESSION["ques_".$t]=$result['correct_ans'];?>
-		<form method ='post' id='quiz_form1' action="" >
+		
 		<div id="question_<?php echo $i;?>" class='questions'>
         <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
-	    <input id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>"> 
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> 
+		</textarea>
 		</br>
 	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
 		<p id="testResult_<?php echo $result['ques_id'];?>"></p>
@@ -137,14 +138,52 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
         <p id="ques_ques_<?php echo $result['ques_id'];?>"></p>
 
 		<script src="viz.js"></script>
+		<script src="bfs.js"></script>
 		<script>
 		var fn = function(){
 		var inputAns<?php echo $result['ques_id']?>=document.querySelector("#txt_<?php echo $result['ques_id'];?>");
 		var btn=document.querySelector("#btnclick_<?php echo $result['ques_id'];?>");
-	    
-		btn.addEventListener('click', generateFSM);
+	    btn.addEventListener('click', genFSM);
+		//btn.addEventListener('click', generateFSM);
 		
-	
+	function genFSM(){
+		var transition={
+  src:ident,
+  ch:'~',
+  dest:[ident]
+};
+var ident=0;
+var bfsm={
+  states:[ident],
+  trans:[transition]
+};
+var text=inputAns<?php echo $result['ques_id']?>.value;
+var nfa=JSON.parse(text);
+/*	var nfa= { states: [1,2],
+  trans: [
+{src:1, ch: 'a', dest:[1,0] },
+{src:2, ch:'b', dest:[2,0] }
+          ]
+}; */	
+	console.log("nfa: "+nfa.states.length);
+	var result='digraph { rankdir = LR; none[style=invis];' ;
+	for(var i=0; i<nfa.states.length; i++){
+  result+="none->"+nfa.states[i]+ "[label=start];";
+}
+//display transitions
+for(var j=0; j<nfa.trans.length; j++)
+{
+  for(var k=0; k<nfa.trans[j].dest.length; k++)
+  {
+    result+=nfa.trans[j].src+"->"+nfa.trans[j].dest[k]+ " [label="+nfa.trans[j].ch+"];";
+
+  }
+}
+result+=0+"[shape=doublecircle];";
+result+='}';
+      document.querySelector("#testResult_<?php echo $result['ques_id'];?>").innerHTML=Viz(result);	
+ result="";
+	}
 	function generateFSM(){
       var myresult='digraph G {none[style=invis];rankdir = LR; none->2[label=start]; '; //none->2[label=start];2->1[label=a]}';
 	  myresult+=inputAns<?php echo $result['ques_id']?>.value;
@@ -154,16 +193,12 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
 	  }
 	};
 	eventListeners.push(fn);
-console.log(fn.toString());		
+//console.log(fn.toString());		
 		</script>
-		
-
-		
+	
 	<?php
-	
-	
+		
 	$i++;} ?>
-	
 	
 	
 <?php }?>

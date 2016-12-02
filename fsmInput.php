@@ -62,7 +62,7 @@ $response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQui
 
 <!--dynamically generate questions-->
 <script>var eventListeners = [];</script>
-<form method ='post' id='quiz_form' action="testResult.php" >
+<form method ='post' id='quiz_form' action="fsmResult.php" >
 <div id='ques_form' >
 <?php 
 //right now category hard coded
@@ -129,7 +129,7 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
 		
 		<div id="question_<?php echo $i;?>" class='questions'>
         <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
-	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:420px;width:400px;"> 
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:300px;"> 
 		</textarea>
 		</br>
 	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>

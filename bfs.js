@@ -500,6 +500,10 @@ function helper(exp, id, ds){
          {
            retVal=alt(exp.left,ident,nfa);
          }
+		 else if(exp.value =='0')
+		 {
+			 retVal = nullCase(exp.left, ident, nfa);
+		 }
           else if(exp.left.value=='.')
             {
               retVal=concat(exp.left,ident,nfa);
@@ -515,6 +519,7 @@ function helper(exp, id, ds){
          {
            retVal=alt(exp.left.left,ident,nfa);
          }
+		 
           else if(exp.left.left.value=='.')
             {
               retVal=concat(exp.left.left,ident,nfa);
@@ -538,12 +543,36 @@ function helper(exp, id, ds){
         }
        
       //when only a char is entered, emptycase, null case need to be considered as well
+	  else if(exp.value =='0')
+	  {
+		  retVal = emptyCase(exp, ident, nfa);
+	  }
       else 
       {
         
       }
     
   return retVal;
+}
+// empty string
+function emptyCase(exp, ident, ds)
+{
+	var retVal = new returnValue();
+	retVal.states = [];
+	retVal.trans = [];
+	retVal.b = false;
+	retVal.Ident = ident;
+	return retVal;
+}
+// epsilon string
+function nullCase(exp, ident, ds)
+{
+	var retVal = new returnValue();
+	retVal.states = [];
+	retVal.trans = [];
+	retVal.b = true;
+	retVal.Ident = ident;
+	return retVal;
 }
 
 function concat(exp, ident, ds)
@@ -652,46 +681,53 @@ function parse(exp)
 //function to convert infix expression to prefix. It takes an expression as an argument.
 
 function infixToPrefix()
-{var expression=inputData.value;
-  var expLength=expression.length;
+{   var expression=inputData.value;
+     var expLength=expression.length;
   for(var i=expLength; i>=0; i--)
     {
-      //right paranthesis
-      if(expression[i]===')')
-        {
-          operatorStack.push(expression[i]);
-        }
-      //operand
-      else if(expression[i]=='a' ||expression[i]=='b')
-        {
-          outputPrefix=expression[i]+outputPrefix;
-         // console.log(outputPrefix);
-        }
-      //operator
-      else if(expression[i]=='*' || expression[i]=='.' ||expression[i]=='+')
-        {
-          //while current operator has lower precedence than top of stack, pop stack and insert at start of output of prefix
-          while(operatorStack.length>0 && lowerPrecedence(expression[i], 
-              operatorStack[operatorStack.length-1]))
-            {
-              //pop stack
-              outputPrefix=operatorStack[operatorStack.length-1]+outputPrefix;
-              operatorStack.pop();
-            }
-          operatorStack.push(expression[i]);
-        //  console.log(outputPrefix);
-        }
-      //pop stack till right paranthesis and insert to start of prefix
-      else if(expression[i]=='('){
-        while(operatorStack.length>0 && operatorStack[operatorStack.length-1]!=')')
-          {
-            outputPrefix=operatorStack[operatorStack.length-1]+outputPrefix;
-            operatorStack.pop();
-          }
-        //remove right paranthesis
-        operatorStack.pop();
-     //   console.log(outputPrefix);
-      }
+			  //right paranthesis
+			  if(expression[i]===')')
+				{
+				  operatorStack.push(expression[i]);
+				}
+			  //operand
+			  else if(expression[i] == 'a' || expression[i] =='b' || expression[i]=='0')
+				{
+				  outputPrefix=expression[i]+outputPrefix;
+				 // console.log(outputPrefix);
+				}
+			  //operator
+			  else if(expression[i]=='*' || expression[i]=='.' ||expression[i]=='+')
+				{
+				  //while current operator has lower precedence than top of stack, pop stack and insert at start of output of prefix
+				  while(operatorStack.length>0 && lowerPrecedence(expression[i], 
+					  operatorStack[operatorStack.length-1]))
+					{
+					  //pop stack
+					  outputPrefix=operatorStack[operatorStack.length-1]+outputPrefix;
+					  operatorStack.pop();
+					}
+				  operatorStack.push(expression[i]);
+				//  console.log(outputPrefix);
+				}
+			  //pop stack till right paranthesis and insert to start of prefix
+			  else if(expression[i]=='(')
+			  {
+				while(operatorStack.length>0 && operatorStack[operatorStack.length-1]!=')')
+				  {
+					outputPrefix=operatorStack[operatorStack.length-1]+outputPrefix;
+					operatorStack.pop();
+				  }
+				//remove right paranthesis
+				operatorStack.pop();
+			 //   console.log(outputPrefix);
+			  }
+			  //invalid input
+			  else
+			  {
+			//	 document.getElementById('invalidMsg').innerHTML= "Invalid input! Please enter a valid expression. " 
+			  //    return;
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width">
   <title>RegularExpressionToFSM</title>
   <style type="text/css" src="style.css">
-  	ul {
+  .horizontal {
 
   		list-style-type: none;
   		margin:0;
@@ -17,11 +17,11 @@
   		overflow: hidden;
         background-color: #dddddd;
   	}
-  	li {
+  .horizontal li {
   		float: left;
   	}
   	
-  	li a{
+  .horizontal li a{
 
   		display: block;
   		color: #000;
@@ -43,8 +43,8 @@ color:white;
 </head>
 <body>
 
-<ul>
-<li><a href="homeFSM.php">RegEx To FSM</a></li>
+  <ul class="horizontal">
+  <li><a href="homeFSM.php">RegEx To FSM</a></li>
 <li><a href="operations.php">Perform Operations</a></li>
 <li><a href="login.php">Quiz</a></li>
 <li style="float:right"><a href="#about">About</a></li>

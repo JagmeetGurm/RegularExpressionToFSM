@@ -33,16 +33,18 @@ include("header.php"); //include auth.php file on all secure pages
 <br /><br /><br /><br />
 </div>
 <?php
+$gFsmCheck=false;
 $selectedUser=$_SESSION['username'];
-$selectedQuiz=$_SESSION['quiz_no'];
+$selectedQuiz=4;
+//$selectedQuiz=$_SESSION['quiz_no'];
 $userIdentity=0;
 $selectedCategory=$_SESSION['cat_id'];
-$gFsmCheck=false;
+
 $userIdResult=mysqli_query($con, "SELECT `id` FROM `users` WHERE `username`='{$selectedUser}'");
 	 while($userId=$userIdResult->fetch_assoc()){
 		$userIdentity=$userId['id'];
 	 }
-	$insertTaken="INSERT INTO quiz_taken (user_id, quiz_id, taken)
+	 $insertTaken="INSERT INTO quiz_taken (user_id, quiz_id, taken)
 values($userIdentity,'$selectedQuiz' , 'yes')";
 if($con->query($insertTaken)==TRUE){
 	
@@ -50,7 +52,7 @@ if($con->query($insertTaken)==TRUE){
 else{
 				echo "Error: " . $insertTaken . "<br>" . $con->error;
 
-} 
+}
 	$right_answer=0;
 	 $wrong_answer=0;
 	 $unanswered=0;
@@ -141,7 +143,7 @@ foreach($_POST AS $key => $value2)
 		
 		<div id="question_<?php echo $i;?>" class='questions'>
         <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
-	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> <?php echo $_POST[$key];?>
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:420px;width:400px;"> <?php echo $_POST[$key];?>
 		</textarea>
 		</br>
 	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
@@ -192,7 +194,7 @@ function visit(ArrWord, nfa)
    listOfStrings.push(ArrWord[k]);
   }
 
-  while(listOfStrings.length>0 && listOfWords.length!=20)
+  while(listOfWords.length!=20)
   { 
   console.log("lsitstring size: "+listOfStrings.length);
 
@@ -378,12 +380,20 @@ result+='}';
 	
 		}
     }
+	
+	
+	
+	////////////////
+	
+	
+	
+	
  ?>
 <script>document.addEventListener("DOMContentLoaded", function () {
-	console.log(eventListeners);
+	//console.log(eventListeners);
 	for(var i = 0; i < eventListeners.length; i++) {
 		eventListeners[i]();
-		console.log(eventListeners[i].toString());
+		//console.log(eventListeners[i].toString());
 	}
 });</script>
 </body>
