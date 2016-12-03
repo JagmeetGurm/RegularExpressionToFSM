@@ -52,12 +52,52 @@ if(!empty($_SESSION['name']))
 <a href="index.php" style="float:left; display:block; margin:10px;">Home</a>
 <a href="logout.php" style="float:left; display:block; margin:10px;">Logout</a>
 
-
 <br /><br /><br /><br />
+</div>
+<div id="instruction" style="padding:10px;">
+<p><b>Instructions for taking quiz:</b></p>
+<p>1. For multiple choice questions and two option questions, simple select one correct choice.</p>
+<p>2. For create FSM type questions, the text has to entered in JSON format. The JSON object represents
+the nfa. NFA must be of McIlroy's Backward Construction. This means there is only one final state, 
+can be one or more than one start states, and one char transition from each state. 
+The format has to be strictly followed to get correct answer. For <b>example:</b></p>
+<textarea  style="font-size:10pt;height:300px;width:600px;"> 
+{
+ "states": [1,2],
+ "trans": [{"src": 1,
+           "ch": "a",
+           "dest": [1, 0]
+          },
+		  {"src": 2,
+           "ch": "b",
+           "dest": [0]
+          }
+         ]
+}
+</textarea>
+<p id="exResult"></p>
+<script src="viz.js"></script>
+<script>
+var exampleResult='digraph G {none[style=invis];rankdir = LR; none->2[label=start]; none->1[label=start];';
+exampleResult+='2->0[label=b]; 1->1[label=a]; 1->0[label=a];';
+exampleResult+='0[shape=doublecircle];';
+exampleResult+='}';
+document.getElementById('exResult').innerHTML=Viz(exampleResult);
+</script>
+
+
+
+<p> The object consists of two elements: "states" which is a set of initial start states and 
+"trans" which is a set of transitions from a source ("src") on a char ("ch") to a set of destination 
+("dest").</p>
+<p>3. <b>Warning: </b>Make your JSON code is entered in correct format and not empty else result will
+ not be accepted. In case of wrong JSON, or leaving empty simply copy the JSON of the example. 
+<p>4. For list first 5 strings in length and lexicographical order for a given regular expression
+, list them separated by commas. For example, reg exp. a*b: b, ab, aab, aaab, aaaab.</p>
 </div>
 <?php
 $chosenQuiz=$_SESSION['quiz_no']; 
-echo "<h1>Quiz Level: ".$chosenQuiz."</h1></br></br>";
+echo "<h1 style='padding:5px;'>Quiz Level: ".$chosenQuiz."</h1></br></br>";
 $response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz'");?>
 
 <!--dynamically generate questions-->
@@ -133,6 +173,7 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
 		</textarea>
 		</br>
 	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
+		<b><p id="errorMsg_<?php echo $result['ques_id'];?>"></p></b>
 		<p id="testResult_<?php echo $result['ques_id'];?>"></p>
 		<p id="ques_ques_<?php echo $result['ques_id'];?>"></p>
         <p id="ques_ques_<?php echo $result['ques_id'];?>"></p>
@@ -158,6 +199,23 @@ var bfsm={
   trans:[transition]
 };
 var text=inputAns<?php echo $result['ques_id']?>.value;
+
+  function isJson(text){
+	  
+   try {
+        var temp=JSON.parse(text);
+    } catch (e) {
+        return false;
+    }
+	return true;
+	 }
+    if(!isJson(text))
+	{
+		document.getElementById("errorMsg_<?php echo $result['ques_id'];?>").innerHTML="INvalid JSON. Check instructions.";
+		return;
+	}
+		document.getElementById("errorMsg_<?php echo $result['ques_id'];?>").innerHTML="";
+	
 var nfa=JSON.parse(text);
 /*	var nfa= { states: [1,2],
   trans: [
@@ -165,7 +223,7 @@ var nfa=JSON.parse(text);
 {src:2, ch:'b', dest:[2,0] }
           ]
 }; */	
-	console.log("nfa: "+nfa.states.length);
+	//console.log("nfa: "+nfa.states.length);
 	var result='digraph { rankdir = LR; none[style=invis];' ;
 	for(var i=0; i<nfa.states.length; i++){
   result+="none->"+nfa.states[i]+ "[label=start];";
@@ -192,14 +250,32 @@ result+='}';
 	  myresult="";
 	  }
 	};
+	
 	eventListeners.push(fn);
 //console.log(fn.toString());		
 		</script>
 	
 	<?php
 		
-	$i++;} ?>
+	$i++;} 
 	
+		//type first 5 strings that match
+		else if($result['ques_type']==='str')
+		{
+		
+          $t=$result['ques_id'];
+	//echo $t;
+		$_SESSION["ques_".$t]=$result['correct_ans'];?>
+		
+		<div id="question_<?php echo $i;?>" class='questions'>
+        <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:50px;width:600px;"> 
+		</textarea>
+		</div>
+		<?php
+		$i++;}
+		?>
+
 	
 <?php }?>
 <input type='submit' value="Submit" name ="submit" />
@@ -266,10 +342,10 @@ $response2=mysqli_query($con, "select ques_id,ques_name,correct_ans from questio
 */
 ?>
 <script>document.addEventListener("DOMContentLoaded", function () {
-	console.log(eventListeners);
+	//console.log(eventListeners);
 	for(var i = 0; i < eventListeners.length; i++) {
 		eventListeners[i]();
-		console.log(eventListeners[i].toString());
+		//console.log(eventListeners[i].toString());
 	}
 });</script>
 </body>

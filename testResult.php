@@ -38,6 +38,8 @@ $selectedQuiz=$_SESSION['quiz_no'];
 $userIdentity=0;
 $selectedCategory=$_SESSION['cat_id'];
 $gFsmCheck=false;
+//use it as a direct object
+
 $userIdResult=mysqli_query($con, "SELECT `id` FROM `users` WHERE `username`='{$selectedUser}'");
 	 while($userId=$userIdResult->fetch_assoc()){
 		$userIdentity=$userId['id'];
@@ -77,11 +79,11 @@ else{
 			  }	
 	     }
 	
-	 echo " Right Answer  : <span class='highlight'>". $right_answer."</span><br>";
+	 echo " <span class='highlight' style='padding:10px;'>Right Answer:". $right_answer."</span><br>";
 
-	 echo " Wrong Answer  : <span class='highlight'>". $wrong_answer."</span><br>";
+	 echo "<span class='highlight' style='padding:10px;'> Wrong Answer: ". $wrong_answer."</span><br>";
 
-	 echo " Unanswered Question  : <span class='highlight'>". $unanswered."</span><br>";
+	 echo "<span class='highlight' style='padding:10px;'>Unanswered Question: ". $unanswered."</span><br>";
 	 
 	 //save the result
 	
@@ -135,22 +137,28 @@ foreach($_POST AS $key => $value2)
 		
 		else if($result['ques_type']==='fsm')
 	{ 
+$ob=json_decode($_POST[$key]);
+if($ob == null){
+	echo "Error. Your JSON code is invalid";
+	return;
+}
       $t=$result['ques_id'];
 	//echo $t;
 		//$_SESSION["ques_".$t]=$result['correct_ans'];?>
 		
 		<div id="question_<?php echo $i;?>" class='questions'>
         <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
-	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> <?php echo $_POST[$key];?>
+	    <p> Your answer: </p>
+		<textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> <?php echo $_POST[$key];?>
 		</textarea>
 		</br>
-	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
-		<p> Your answer: </p>
+	   <b>	<p id="fsmcheck_<?php echo $result['ques_id'];?>"></p></b>
+<!-- //<?php echo $gFsmCheck==true? "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
+	--><p>Correct answer: </p>
+	<p><?php echo $gFsmCheck;?></p>
+	<p id="correct_<?php echo $result['ques_id'];?>"></p>	
 		<p id="testResult_<?php echo $result['ques_id'];?>"></p>
-		
-<?php echo $gFsmCheck==true? "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
-	<p>Correct answer: <p>
-	<p id="correct_<?php echo $result['ques_id'];?>"></p>
+
 		<script src="viz.js"></script>
 		<script src="Underscore.js"></script>
 		<script src="bfs.js"></script>
@@ -194,10 +202,10 @@ function visit(ArrWord, nfa)
 
   while(listOfStrings.length>0 && listOfWords.length!=20)
   { 
-  console.log("lsitstring size: "+listOfStrings.length);
+  //console.log("lsitstring size: "+listOfStrings.length);
 
    var firstElement=listOfStrings[0];
-   console.log("first element: "+firstElement.enumNfa);
+   //console.log("first element: "+firstElement.enumNfa);
     listOfStrings.splice(0,1);
     if(_.contains(firstElement.enumNfa, 0))
     {listOfWords.push(firstElement.enumString);
@@ -220,10 +228,10 @@ function visit(ArrWord, nfa)
   });
 //remove duplicates
 _.uniq(listOfWords);
-  console.log("final string llist: "+ listOfWords);
+ // console.log("final string llist: "+ listOfWords);
  for(var j=0; j<listOfStrings.length; j++)
  {
-console.log("enum : "+ listOfStrings[j].enumString + ": "+ listOfStrings[j].enumNfa);
+//console.log("enum : "+ listOfStrings[j].enumString + ": "+ listOfStrings[j].enumNfa);
  }
  //if ret contains 0, add ret's string to list of strings
 //console.log("check ret" +ret[0].src+ "  "+ret[0].ch + "   "+ret[0].dest) ;
@@ -250,7 +258,7 @@ function grp(eNfa, nfa)
         }
       }
     }
-      console.log("listword size: "+ listWord.length);
+    //  console.log("listword size: "+ listWord.length);
       return listWord;
     
     
@@ -284,19 +292,25 @@ function enumA(nfaForMatching){
 
 /*//var text=<?php echo $_POST[$key];?>.toString();
 //console.log(text); */
-//use it as a direct object
-var nfaUser=<?php echo $_POST[$key];?>;
+
+//var nfaUser=isJson(_POST[$key])
+var nfaUser=<?php echo isset($_POST[$key])? $_POST[$key]: '{"states": [], "trans":[]}';?>;
 var text=<?php echo $result['correct_ans'];?>;
 //correct ans
 var nfa=text;
 compareNfas(nfa, nfaUser);
 function compareNfas(n1, n2){
 	var r1=enumA(n1);
+	//console.log("r1correct:"+ r1);
 	var r2=enumA(n2);
+	//console.log("r2user: "+r2);
 	if(r1.sort().join(',')=== r2.sort().join(',')){
-    $gFsmCheck=true;
+     
+	 document.getElementById("fsmcheck_<?php echo $result['ques_id'];?>").innerHTML="Your ans is Correct";
 }
-else $gFsmCheck=false;
+else { 	 document.getElementById("fsmcheck_<?php echo $result['ques_id'];?>").innerHTML="Your ans is Wrong";
+<?php $gFsmCheck=false; ?>}
+//console.log("ans: "+$gFsmCheck);
 }
 /*	var nfa= { states: [1,2],
   trans: [
@@ -304,7 +318,7 @@ else $gFsmCheck=false;
 {src:2, ch:'b', dest:[2,0] }
           ]
 }; 	*/
-	console.log("nfa: "+nfa.states.length);
+	//console.log("nfa: "+nfa.states.length);
 	var result='digraph { rankdir = LR; none[style=invis];' ;
 	for(var i=0; i<nfa.states.length; i++){
   result+="none->"+nfa.states[i]+ "[label=start];";
@@ -336,7 +350,7 @@ result+='}';
 //console.log(fn.toString());		
 		</script>
 		
-
+		
 		
 	<?php
 	
@@ -366,6 +380,33 @@ result+='}';
 	</div>
 	<?php $i++;}	
 	
+	else if($result['ques_type']==='str')
+	{ 
+      $t=$result['ques_id'];
+	//echo $t;
+		//$_SESSION["ques_".$t]=$result['correct_ans'];?>
+		
+		<div id="question_<?php echo $i;?>" class='questions'>
+        <h2 id="question_<?php echo $i;?>"><?php echo $i.".".$result['ques_name'];?></h2>
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> <?php echo $_POST[$key];?>
+		</textarea>
+		
+		<p><?php  $userEnum=explode(",",$_POST[$key]);
+		          $correctEnum= explode(",",$_SESSION[$key]);
+				  for($a=0; $a<count($userEnum); $a++)
+		{
+			if($_POST[$key][$a]==$_SESSION[$key][$a])
+				echo "hi";
+			else "no";
+		}			?></p>
+		<?php echo isset($_POST[$key]) && strcmp("$_POST[$key]","$_SESSION[$key]")==0? "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
+	<p id="ques_ques_<?php echo $result['ques_id'];?>">Your answer: <?php echo isset($_POST[$key])? $_POST[$key]: "unanswered" ;?></p>
+	<p id="ques_ques_<?php echo $result['ques_id'];?>">Correct answer: <?php echo $_SESSION[$key];?></p>
+
+	</div>
+		<?php $i++;
+	}
+	echo strcmp("b, ab, aab, bab, bbb", "b, ab, aab, bab, bbb");
 	$intKey=(int)$tempKey;
 	$sql="INSERT INTO register.results (user_id, category_id, ques_id, quiz_no, user_ans, score, taken) 
                      	VALUES ({$userIdentity},{$selectedCategory},{$intKey} ,'{$selectedQuiz}','{$_POST[$key]}',{$right_answer}, 'yes')";
@@ -380,10 +421,10 @@ result+='}';
     }
  ?>
 <script>document.addEventListener("DOMContentLoaded", function () {
-	console.log(eventListeners);
+	//console.log(eventListeners);
 	for(var i = 0; i < eventListeners.length; i++) {
 		eventListeners[i]();
-		console.log(eventListeners[i].toString());
+		///console.log(eventListeners[i].toString());
 	}
 });</script>
 </body>

@@ -38,12 +38,14 @@ include("header.php");
 #rightpane{
  // color: #929292;//	#00008B;
   /*background-color: #fff ;*/
-  margin-top:100px;
-  margin-left: 175px;
+  margin-top:10px;
+  margin-left: 200px;
 margin-right:0;
-  float:right;
+ // float:right;
 padding-left:6px;
-padding-right:3px;
+padding-right:10px;
+width: 1000px;
+word-wrap: break-word;
 }
 </style>
 </head>
@@ -72,10 +74,13 @@ arranged in order of length followed by lexicographical order.
 <button id="btnConvert">Generate List</button>
 <p ><b id="invalidMsg"></b></p>
 <p><b>Nfa:</b></p>
+<div>
 <p id="nfaResult"></p>
+</div>
 </br>
 <p><b>Resultant List: </b> </p>
 <p id="enumerateResult" style="font-weight: bold; font-size: large;"></p>
+</div>
 <script src="viz.js"></script>
 <script src="enum.js"></script>
 <script src="Underscore.js"></script>

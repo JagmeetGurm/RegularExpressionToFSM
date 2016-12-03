@@ -56,7 +56,8 @@ color:white;
 <p>"Regular Expression To FSM provides a comprehensive web tool related to finite automata. Practice conversion of  Regular Expression to Non-Deterministic Automata and Deterministic Automata. Further, can also perform string matchin on the generating Finite Automata. Then, test your knowledge by going to the quiz section. "</p>
 <div style="float:left; width: 70%; "> 
 <h2>Regex To FSM</h2>
-<p>"Simply enter a regular expression over domain {a,b} to perform the conversion. For example: (a+b)*. For nil/empty string, use 0 and for epsilon string use 0*."</p>
+<p>Simply enter a regular expression over domain {a,b} to perform the conversion and get Non-Deterministic and its equivalent Deterministic Machine. For example: (a+b)*. For nil/empty string, use 0 and for epsilon string use 0*. '+' represents Union/alteration, 
+'.' represents concatenation operation and '*' represents kleene closure operation( 0 or more).</p>
 <label for="regex"><b>Regex: </b></label>
 <input type="text" id="regex" placeholder=" Enter your Regular Expression" size="35">
 
@@ -65,9 +66,9 @@ color:white;
 <p></p>
 </div>
 
-<div style="float:right; width: 30%">
+<div style="float:right; width: 30%; ">
 <h2>String Matching</h2>
-<p>"Enter the string to check if the generated FSM accepts it or not."</p>
+<p>Enter the string to check if the generated FSM accepts it or not.</p>
 <label for="matchString"><b>String To Match: </b></label>
 <input type="text" id="match" placeholder=" Enter your string to match" size="35">
 <button id="stringMatchButton">String Match</button>
