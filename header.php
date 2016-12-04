@@ -47,7 +47,8 @@ color:white;
   <li><a href="homeFSM.php">RegEx To FSM</a></li>
 <li><a href="operations.php">Perform Operations</a></li>
 <li><a href="login.php">Quiz</a></li>
-<li style="float:right"><a href="#about">About</a></li>
+<li><a href="regexMatch.php">Regex Matching</a></li>
+<li style="float:right"><a href="about.php">About</a></li>
 </ul>
 </body>
 </html>

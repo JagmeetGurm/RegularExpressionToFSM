@@ -1,97 +1,16 @@
-<?php
-include("header.php");
-?>
-<!DOCTYPE html>
-
-<html>
-<!-- the code for the navigation bar has been taken from: "w3schools.com" -->
-<head>
-<style>
-.vertical{
-  margin-top:20px;
-  padding:0;
-  list-style-type:none;
- position: fixed; /* Make it stick, even on scroll */
-    overflow: auto; 
-  height:100%;
-   background-color: #320;
-    
-}
-.vertical li a{
-  display: block;
-  width: 150px;
-  background-color: #320;
-  text-decoration: none;
-  padding:10px;
-  color:white;
-  
-  
-}
-
-.vertical li {
-
-    text-align: center;
-   // border-bottom: 1px solid #555;
-// width: 150px;
-
-}
-#rightpane{
- // color: #929292;//	#00008B;
-  /*background-color: #fff ;*/
-  margin-top:10px;
-  margin-left: 200px;
-margin-right:0;
- // float:right;
-padding-left:6px;
-padding-right:10px;
-width: 1000px;
-word-wrap: break-word;
-}
-</style>
-</head>
-
-<body>
-
-<div class="leftmenu">
-      <ul class="vertical">
-
-  <li><a href="#enumerate">Enumerate list</a></li>
-  <li><a href="performOperations.php">Union</a></li>
-  <li><a href="concatOperation.php">Concat</a></li>
-  <li><a href="starOperation.php">Star</a></li>
-</ul>
-</div>
-
-<div id="rightpane">
-<p>Operations like Union(+), Concatentation(.) and Kleene Star(*) can be
-performed on regular expressions. So, go head and practice!</p>
-<div>
-<p id="enumerate">
-Enter a regular expression over domain {a,b} to get a list of first 20 strings matched by it and 
-arranged in order of length followed by lexicographical order.
-</p>
-<label for="regex"><b>Regex: </b></label>
-<input type="text" id="regex" placeholder=" Enter your Regular Expression" size="35">
-
-<button id="btnConvert">Generate List</button>
-<p><b id="invalidMsg"></b></p>
-<p><b>Nfa:</b></p>
-
-<p id="nfaResult"></p>
-<script src="viz.js"></script>
-<script src="Underscore.js"></script>
-<script >
-/*The algorithm for  enumerating the strings is refrenced from the McIlroy's Paper 
+/*The algorithm for converting regex to NFA is refrenced from the McIlroy's Paper 
 "Functional Pealrs- Enumerating the strings of regular languages". Reference: 
 www.cs.dartmouth.edu/~doug/nfa.ps.gz
 
 */
 
-var inputData=document.querySelector("#regex");
-var buttonConvert=document.querySelector("#btnConvert");
-buttonConvert.addEventListener('click', infixToPrefix);
+var inputData=document.querySelector("#regexUnion2");
+var buttonConvertUnion2=document.querySelector("#btnUnion2");
+buttonConvertUnion2.addEventListener('click', infixToPrefix);
+//var buttonConvertUnion2=document.querySelector("#btnUnion2");
+//buttonConvertUnion2.addEventListener('click', infixToPrefix);
 //var resultDisplay=document.querySelector("#result");
-var result='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
+var result='digraph { rankdir = LR; none[style=invis];'; //' none->0 [label=start];';
 //var inputString=document.querySelector("#match");
 //var stringButton=document.querySelector("#stringMatchButton");
 //stringButton.addEventListener('click', stringMatch);
@@ -172,8 +91,13 @@ function r2n(regExp){
   printFinal(returnVal);
   nfaForMatching=returnVal;
  // nfaToDfa(returnVal);
-  
-  enumA();
+ //reset values 
+  operandStack=[];
+  operatorStack=[];
+  outputPrefix="";
+  ident=0;
+  result='digraph { rankdir = LR; none[style=invis];';
+ // enumA();
 }
 
 
@@ -817,7 +741,7 @@ for(var j=0; j<nfa.trans.length; j++)
 result+=0+"[shape=doublecircle];";
 result+='}';
 //console.log(result);
-document.getElementById("nfaResult").innerHTML+=Viz(result);
+document.getElementById("resultUnion2").innerHTML=Viz(result);
 }
 
 function dfaTransition(){
@@ -1433,74 +1357,3 @@ function lowerPrecedence(op1, op2)
 }
 
 
-
-
-</script>
-
-
-</br>
-<p><b>Resultant List: </b> </p>
-<p id="enumerateResult" style="font-weight: bold; font-size: large;"></p>
-</div>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<div class="union">
-<p id="union">
-Enter any two regular expressions and perform the Union or the Alteration (+) operation on them.
-The resultant FSM is displayed below. 
-</p>
-<div style="float:left; width: 50%; ">
-<label for="regex"><b>Regex 1: </b></label>
-<input type="text" id="regexUnion1" placeholder=" Enter your Regular Expression" size="35">
-<button id="btnUnion1">Convert</button>
-<p id="resultantDisplay1"> NFA 1: </p>
-<p id="resultUnion1"></p>
-<script>
-
-</script>
-</div>
-
-<div style="float:right; width:50%;">
-<label for="regex"><b>Regex 2: </b></label>
-<input type="text" id="regexUnion2" placeholder=" Enter your Regular Expression" size="35">
-<button id="btnUnion2">Convert</button>
-<p id="resultantDisplay2">NFA 2: </p>
-<p id="resultUnion2"></p>
-</div>
-
-<script src="viz.js"></script>
-
-<script src="Underscore.js"></script>
-</div>
-
-</div>
-</body>
-</html>

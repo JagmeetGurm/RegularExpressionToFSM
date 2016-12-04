@@ -8,14 +8,12 @@ require('db.php');
 include("auth.php");
 include("header.php"); //include auth.php file on all secure pages
 $category='';
-
 if(!empty($_REQUEST['username']))
 {
 	$name=$_REQUEST['username'];
 	//$category=$_R
 	$_SESSION['name'] = $name;
 	$_SESSION['id'] = mysqli_insert_id($con);
-
 }
 $category = 2;
 if(!empty($_SESSION['name']))
@@ -110,7 +108,6 @@ $response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQui
 $i=1;
 while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
 {//$_SESSION['result']=$result;
-
 	if($result['ques_type']==='m')
 		
 	{$t=$result['ques_id'];
@@ -199,7 +196,6 @@ var bfsm={
   trans:[transition]
 };
 var text=inputAns<?php echo $result['ques_id']?>.value;
-
   function isJson(text){
 	  
    try {
@@ -234,7 +230,6 @@ for(var j=0; j<nfa.trans.length; j++)
   for(var k=0; k<nfa.trans[j].dest.length; k++)
   {
     result+=nfa.trans[j].src+"->"+nfa.trans[j].dest[k]+ " [label="+nfa.trans[j].ch+"];";
-
   }
 }
 result+=0+"[shape=doublecircle];";
@@ -284,7 +279,6 @@ result+='}';
 <?php
 /*
 if(isset($_POST['submit'])){
-
 $response2=mysqli_query($con, "select ques_id,ques_name,correct_ans from questions");
 	 $i=1;
 	 $right_answer=0;
@@ -333,9 +327,7 @@ $response2=mysqli_query($con, "select ques_id,ques_name,correct_ans from questio
 	 }
 	 echo "<div id='answer'>";
 	 echo " Right Answer  : <span class='highlight'>". $right_answer."</span><br>";
-
 	 echo " Wrong Answer  : <span class='highlight'>". $wrong_answer."</span><br>";
-
 	 echo " Unanswered Question  : <span class='highlight'>". $unanswered."</span><br>";
 	 echo "</div>";
 }

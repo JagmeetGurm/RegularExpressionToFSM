@@ -23,6 +23,11 @@ include("header.php"); //include auth.php file on all secure pages
 		</style>
 </head>
 <body>
+
+<p style="float:left; display:block; margin:10px;"><b>Welcome <?php echo $_SESSION['username']; ?>!</b></p>
+<a href="index.php" style="float:left; display:block; margin:10px;">Home</a>
+<a href="logout.php" style="float:left; display:block; margin:10px;">Logout</a>
+<br></br>
 <script>var eventListeners = [];</script>
 <?php 
 /*
@@ -106,8 +111,6 @@ if(isset($_POST['Submit'])){
 									//mysqli_query($con, "INSERT INTO register.results (user_id, category_id, ques_id, quiz_no, user_ans, score, taken) 
 									  //               	VALUES ({$userId['id']},2,{$intKey} ,'2',{$right_answer}, 'yes')");
 									}
-
-
 //fsm type questions
 									else if($getQuesName['ques_type']==='fsm')
 										{ 
@@ -117,15 +120,19 @@ if(isset($_POST['Submit'])){
 											
 											<div id="question_<?php echo $i;?>" class='questions'>
 											<h2 id="question_<?php echo $i;?>"><?php echo $i.".".$getQuesName['ques_name'];?></h2>
-											<input id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" value="<?php echo $getQuesName['user_ans'];?>"> 
+											  <p> Your answer: </p>
+											<textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>" style="font-size:10pt;height:220px;width:600px;"> <?php echo $result['user_ans'];?>
+											
+											</textarea>
+											
 											</br>
-											<button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
-											<p> Your answer: </p>
-											<p id="testResult_<?php echo $result['ques_id'];?>"></p>
-											<p id="ques_ques_<?php echo $result['ques_id'];?>"></p>
-											<p id="ques_ques_<?php echo $result['ques_id'];?>"></p>
-									<?php echo $result['user_ans']== $getQuesName['correct_ans']? "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
-										
+											 <b>	<p id="fsmcheck_<?php echo $result['ques_id'];?>"></p></b>
+											 <p>Correct answer: </p>
+											 <p id="correct_<?php echo $result['ques_id'];?>"><?php echo $getQuesName['correct_ans'];?></p>	
+		                                     <p id="testResult_<?php echo $result['ques_id'];?>"></p>
+
+											<script src="Underscore.js"></script>
+		                                     <script src="bfs.js"></script>
 											<script src="viz.js"></script>
 											<script>
 											var fn = function(){
@@ -144,7 +151,7 @@ if(isset($_POST['Submit'])){
 										 // }
 										};
 										eventListeners.push(fn);
-									console.log(fn.toString());		
+									//console.log(fn.toString());		
 											</script>
 											
 
@@ -153,7 +160,6 @@ if(isset($_POST['Submit'])){
 										
 										
 										$i++;} 
-
 	
 											else if($getQuesName['ques_type']==='b') 
 												{
@@ -197,10 +203,10 @@ if(isset($_POST['Submit'])){
 //mysqli_query($con, );
 ?>
 <script>document.addEventListener("DOMContentLoaded", function () {
-	console.log(eventListeners);
+	//console.log(eventListeners);
 	for(var i = 0; i < eventListeners.length; i++) {
 		eventListeners[i]();
-		console.log(eventListeners[i].toString());
+		//console.log(eventListeners[i].toString());
 	}
 });</script>	
 </body>

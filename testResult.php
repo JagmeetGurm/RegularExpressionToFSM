@@ -39,7 +39,6 @@ $userIdentity=0;
 $selectedCategory=$_SESSION['cat_id'];
 $gFsmCheck=false;
 //use it as a direct object
-
 $userIdResult=mysqli_query($con, "SELECT `id` FROM `users` WHERE `username`='{$selectedUser}'");
 	 while($userId=$userIdResult->fetch_assoc()){
 		$userIdentity=$userId['id'];
@@ -51,7 +50,6 @@ if($con->query($insertTaken)==TRUE){
 }
 else{
 				echo "Error: " . $insertTaken . "<br>" . $con->error;
-
 } 
 	$right_answer=0;
 	 $wrong_answer=0;
@@ -59,7 +57,6 @@ else{
 		 $temp=$_SESSION['result'];
 		 foreach($_SESSION AS $key => $value)
 		 {
-
 			 foreach($_POST AS $key2 => $value2)
 			 {
 			 
@@ -80,15 +77,12 @@ else{
 	     }
 	
 	 echo " <span class='highlight' style='padding:10px;'>Right Answer:". $right_answer."</span><br>";
-
 	 echo "<span class='highlight' style='padding:10px;'> Wrong Answer: ". $wrong_answer."</span><br>";
-
 	 echo "<span class='highlight' style='padding:10px;'>Unanswered Question: ". $unanswered."</span><br>";
 	 
 	 //save the result
 	
 //review result 
-
 ?>
 
 <!--dynamically generate questions-->
@@ -153,8 +147,11 @@ if($ob == null){
 		</textarea>
 		</br>
 	   <b>	<p id="fsmcheck_<?php echo $result['ques_id'];?>"></p></b>
-<!-- //<?php echo $gFsmCheck==true? "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
-	--><p>Correct answer: </p>
+	   <div id="displayTick_<?php echo $result['ques_id'];?>">
+	   <div>
+<!-- // "<h1 style='color:green;'> &#x2713; </h1>": "<h1 style='color:red;'> &#x2717;</h1>";?>
+	-->
+	<p>Correct answer: </p>
 	<p><?php echo $gFsmCheck;?></p>
 	<p id="correct_<?php echo $result['ques_id'];?>"></p>	
 		<p id="testResult_<?php echo $result['ques_id'];?>"></p>
@@ -180,15 +177,12 @@ var bfsm={
   states:[ident],
   trans:[transition]
 };
-
 //////////////////////enum
 ///////////////enumeration 
 var Word={
   enumString:"",
   enumNfa:[]
 } 
-
-
 function visit(ArrWord, nfa)
 {//console.log("arrenum: "+ArrWord[0].enumNfa);
   var listOfWords=[];
@@ -199,26 +193,21 @@ function visit(ArrWord, nfa)
   {
    listOfStrings.push(ArrWord[k]);
   }
-
   while(listOfStrings.length>0 && listOfWords.length!=20)
   { 
   //console.log("lsitstring size: "+listOfStrings.length);
-
    var firstElement=listOfStrings[0];
    //console.log("first element: "+firstElement.enumNfa);
     listOfStrings.splice(0,1);
     if(_.contains(firstElement.enumNfa, 0))
     {listOfWords.push(firstElement.enumString);
-
     }
      var ret= grp(firstElement.enumNfa, nfa);
-
      for(var i=0; i<ret.length; i++)
      {
       var t=firstElement.enumString + ret[i].enumString;
       ret[i].enumString=t;
       listOfStrings.push(ret[i]);
-
      }
   }
   listOfWords.sort();
@@ -254,7 +243,6 @@ function grp(eNfa, nfa)
         //var retWord=new Word();
           //retWord.enumString=nfa.trans[j].ch;
          // retWord.enumNfa
-
         }
       }
     }
@@ -263,7 +251,6 @@ function grp(eNfa, nfa)
     
     
    // console.log("in grp: "+ firstElement.src + " "+ firstElement.ch+ " "+firstElement.dest);
-
   return listWord;
 }
 function enumA(nfaForMatching){
@@ -289,10 +276,8 @@ function enumA(nfaForMatching){
   return retList;
 }
 ///////////////////////enum end
-
 /*//var text=<?php echo $_POST[$key];?>.toString();
 //console.log(text); */
-
 //var nfaUser=isJson(_POST[$key])
 var nfaUser=<?php echo isset($_POST[$key])? $_POST[$key]: '{"states": [], "trans":[]}';?>;
 var text=<?php echo $result['correct_ans'];?>;
@@ -310,6 +295,16 @@ function compareNfas(n1, n2){
 }
 else { 	 document.getElementById("fsmcheck_<?php echo $result['ques_id'];?>").innerHTML="Your ans is Wrong";
 <?php $gFsmCheck=false; ?>}
+
+	var tempCol=document.getElementById("fsmcheck_<?php echo $result['ques_id'];?>").innerHTML;
+	if(tempCol=='Your ans is Correct'){
+		console.log("add elment here");
+		var newp =document.createElement('P');
+		newp.appendChild(document.createTextNode("Yes"));
+		document.getElementById("displayTick_<?php echo $result['ques_id'];?>").appendChild(newp);
+	}
+	else{console.log("not here")};
+	
 //console.log("ans: "+$gFsmCheck);
 }
 /*	var nfa= { states: [1,2],
@@ -329,7 +324,6 @@ for(var j=0; j<nfa.trans.length; j++)
   for(var k=0; k<nfa.trans[j].dest.length; k++)
   {
     result+=nfa.trans[j].src+"->"+nfa.trans[j].dest[k]+ " [label="+nfa.trans[j].ch+"];";
-
   }
 }
 result+=0+"[shape=doublecircle];";

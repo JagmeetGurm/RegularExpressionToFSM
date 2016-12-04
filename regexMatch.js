@@ -1,102 +1,17 @@
-<?php
-include("header.php");
-?>
-<!DOCTYPE html>
-
-<html>
-<!-- the code for the navigation bar has been taken from: "w3schools.com" -->
-<head>
-<style>
-.vertical{
-  margin-top:20px;
-  padding:0;
-  list-style-type:none;
- position: fixed; /* Make it stick, even on scroll */
-    overflow: auto; 
-  height:100%;
-   background-color: #320;
-    
-}
-.vertical li a{
-  display: block;
-  width: 150px;
-  background-color: #320;
-  text-decoration: none;
-  padding:10px;
-  color:white;
-  
-  
-}
-
-.vertical li {
-
-    text-align: center;
-   // border-bottom: 1px solid #555;
-// width: 150px;
-
-}
-#rightpane{
- // color: #929292;//	#00008B;
-  /*background-color: #fff ;*/
-  margin-top:10px;
-  margin-left: 200px;
-margin-right:0;
- // float:right;
-padding-left:6px;
-padding-right:10px;
-width: 1000px;
-word-wrap: break-word;
-}
-</style>
-</head>
-
-<body>
-
-<div class="leftmenu">
-      <ul class="vertical">
-
-  <li><a href="#enumerate">Enumerate list</a></li>
-  <li><a href="performOperations.php">Union</a></li>
-  <li><a href="concatOperation.php">Concat</a></li>
-  <li><a href="starOperation.php">Star</a></li>
-</ul>
-</div>
-
-<div id="rightpane">
-<p>Operations like Union(+), Concatentation(.) and Kleene Star(*) can be
-performed on regular expressions. So, go head and practice!</p>
-<div>
-<p id="enumerate">
-Enter a regular expression over domain {a,b} to get a list of first 20 strings matched by it and 
-arranged in order of length followed by lexicographical order.
-</p>
-<label for="regex"><b>Regex: </b></label>
-<input type="text" id="regex" placeholder=" Enter your Regular Expression" size="35">
-
-<button id="btnConvert">Generate List</button>
-<p><b id="invalidMsg"></b></p>
-<p><b>Nfa:</b></p>
-
-<p id="nfaResult"></p>
-<script src="viz.js"></script>
-<script src="Underscore.js"></script>
-<script >
-/*The algorithm for  enumerating the strings is refrenced from the McIlroy's Paper 
-"Functional Pealrs- Enumerating the strings of regular languages". Reference: 
-www.cs.dartmouth.edu/~doug/nfa.ps.gz
-
-*/
-
 var inputData=document.querySelector("#regex");
 var buttonConvert=document.querySelector("#btnConvert");
 buttonConvert.addEventListener('click', infixToPrefix);
-//var resultDisplay=document.querySelector("#result");
+var resultDisplay=document.querySelector("#result");
 var result='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
-//var inputString=document.querySelector("#match");
-//var stringButton=document.querySelector("#stringMatchButton");
-//stringButton.addEventListener('click', stringMatch);
+var inputString=document.querySelector("#match");
+var stringButton=document.querySelector("#stringMatchButton");
+stringButton.addEventListener('click', stringMatch);
 
 
+var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+var checkCount=0;
+var Index = {};
+var IndexNormal={};
 //stack to store operators for converting infix to prefix
 //final prefix string 
 var nfaForMatching=bfsm;
@@ -169,11 +84,12 @@ function r2n(regExp){
   console.log(returnVal.states);
   console.log("union final nfa: ");
  returnVal.states=_.union(returnVal.states,oldStartStates );
-  printFinal(returnVal);
+ console.timeEnd("LAMatching");
+  //printFinal(returnVal);
   nfaForMatching=returnVal;
  // nfaToDfa(returnVal);
   
-  enumA();
+  //enumA();
 }
 
 
@@ -187,7 +103,7 @@ var Word={
 
 function visit(ArrWord, nfa)
 {
-  var listOfWords=[];
+  var listOfWords=['~'];
   
   var listOfStrings=[];
   
@@ -196,7 +112,7 @@ function visit(ArrWord, nfa)
    listOfStrings.push(ArrWord[k]);
   }
 
-  while(listOfStrings.length>0 && listOfWords.length<20)
+  while(listOfStrings.length>0 && listOfWords[listOfWords.length-1].length<5)
   { 
   //console.log("lsitstring size: "+listOfStrings.length);
 
@@ -225,17 +141,17 @@ function visit(ArrWord, nfa)
   });
 //remove duplicates
 _.uniq(listOfWords);
-  console.log("final string list: "+ listOfWords);
-//var myNewList=[];
- //for(var j=0; j<listOfWords.length; j++)
- //{
-  //if(listOfWords[j].length==5){
-//myNewList.push(listOfWords[j]);
-  //}
-  //}
-  //console.log("my new list: "+myNewList);
+  console.log("final string llist: "+ listOfWords);
+var myNewList=[];
+ for(var j=0; j<listOfWords.length; j++)
+ {
+  if(listOfWords[j].length==4){
+myNewList.push(listOfWords[j]);
+  }
+  }
+  console.log("my new list: "+myNewList);
  
- document.getElementById("enumerateResult").innerHTML = listOfWords;
+ 
 
 }
 //first element's list of start states
@@ -402,6 +318,8 @@ localCombineIndex.localIndex=testCombineIndex.myIndex;
           continue;
         var t=localCombineIndex.localIndex[CurrentActive[j]][testString[i]][testString[i+1]];
         NextActive=_.union(NextActive, t);
+     //   var t2=localCombineIndex.localFinalIndex[CurrentActive[j]][testString[i+1]];
+       // NextActive=_.union(NextActive, t2);
       }
 
      // console.log("check1: "+CurrentActive);
@@ -440,32 +358,39 @@ localCombineIndex.localIndex=testCombineIndex.myIndex;
 
     } 
     ///Print final value: 
+	if(bValue==true)
+	resultDisplay.innerHTML="Matching Result: " + bValue + ". The expression matched the string.";
+else 	resultDisplay.innerHTML="Matching Result: " + bValue + ". The expression didn't match the string.";
+
 console.log("Match or not: "+bValue);
+checkCount++;
 }
 /////////////////////////////////
 //this is the faster version
-var alphabet = "ab";
+//var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 function buildLookAheadIndex()
 
 { console.time("concatenation");
 
   var nfa= nfaForMatching;
-  var Index = {};
-  //var FinalIndex ={};
+  //var Index = {};
+  var FinalIndex ={};
+  if(checkCount==0)
+  {
   for(var i=0; i<nfa.trans.length; i++)
   {
       var s=nfa.trans[i].src;
       if(s in Index==false)
       {
         Index[s]={};
-      //  FinalIndex[s]={};
+       // FinalIndex[s]={};
       }
 
-            for(var j=0; j<2; j++)
+            for(var j=0; j<26; j++)
             {
               var char1=alphabet[j];
               Index[s][char1]={};
-           //   FinalIndex[s][char1]=[];
+         //     FinalIndex[s][char1]=[];
 
                     for(var k=0; k<2; k++)
                     {
@@ -490,22 +415,27 @@ _.union(Index[nfa.trans[l].src][nfa.trans[l].ch][nfa.trans[n].ch], [nfa.trans[l]
           }
         }
       }
-     /* if(_.contains(nfa.trans[l].dest, 0)==false)
+  /*    for(var o=0; o<nfa.trans[l].dest.length; o++)
       {
-        FinalIndex[nfa.trans[l].src][nfa.trans[l].ch]=_.union(FinalIndex[nfa.trans[l].src][nfa.trans[l].ch], nfa.trans[l].dest);
-      } */
+     if(nfa.trans[l].dest[o]!=0)
+      {
+        FinalIndex[nfa.trans[l].src][nfa.trans[l].ch]=_.union(FinalIndex[nfa.trans[l].src][nfa.trans[l].ch], nfa.trans[l].dest[0]);
+      } 
+    }
+    */
     }
 
-
+}
 myCombineIndex.myIndex=Index;
 //myCombineIndex.myFinalIndex=FinalIndex;
 lookAheadCount(nfa, myCombineIndex);
 console.timeEnd("concatenation");
+
 }
 
 
 ///////////normal matching
-function normalCountMatching(Index, nfa)
+function normalCountMatching(IndexN, nfa)
 {
   var currentActive=[];
   var nextActive=[];
@@ -513,14 +443,14 @@ function normalCountMatching(Index, nfa)
   var temp =[];
   var testString=inputString.value;
   currentActive = _.union(currentActive, nfa.states);
-  console.log("nfa states: "+nfa.states);
+ // console.log("nfa states: "+nfa.states);
   for(var i=0; i<testString.length-1; i++)
   {
     for(var j=0; j<currentActive.length; j++)
     {
       if(currentActive[j]==0)
           continue;
-      nextActive = _.union(nextActive, Index[currentActive[j]][testString[i]]);
+      nextActive = _.union(nextActive, IndexN[currentActive[j]][testString[i]]);
     }
   //  temp=_.intersection(nextActive, [0]);
       if(nextActive.length>0)
@@ -530,7 +460,7 @@ function normalCountMatching(Index, nfa)
       currentActive = nextActive;
       nextActive = [];
   }
-console.log("normalcurrentactive: "+currentActive);
+//console.log("normalcurrentactive: "+currentActive);
   var bValue=false;
     if(matchCount==testString.length-1 )
     {
@@ -553,6 +483,7 @@ console.log("normalcurrentactive: "+currentActive);
     } 
     ///Print final value: 
 console.log("Match or not normal matching: "+bValue);
+//checkCount++;
 
 }
 function buildIndex()
@@ -560,31 +491,32 @@ function buildIndex()
   console.time("normal matching");
 
   var nfa= nfaForMatching;
-  var Index = {};
-  
+  //var IndexNormal = {};
+  if(checkCount==0)
+  {
   for(var i=0; i<nfa.trans.length; i++)
   {
       var s=nfa.trans[i].src;
-      if(s in Index==false)
+      if(s in IndexNormal==false)
       {
-        Index[s]={};
+        IndexNormal[s]={};
         
       }
-            for(var j=0; j<2; j++)
+            for(var j=0; j<26; j++)
             {
               var char1=alphabet[j];
-              Index[s][char1]=[]; 
+              IndexNormal[s][char1]=[]; 
             }
 
   }
           for (var k=0; k<nfa.trans.length; k++)
             {
               
-              Index[nfa.trans[k].src][nfa.trans[k].ch]=_.union(Index[nfa.trans[k].src][nfa.trans[k].ch], nfa.trans[k].dest);
+              IndexNormal[nfa.trans[k].src][nfa.trans[k].ch]=_.union(IndexNormal[nfa.trans[k].src][nfa.trans[k].ch], nfa.trans[k].dest);
             }
-
+}
          // console.log("in normal matching: "+ Index[4]['b']);
-          normalCountMatching(Index, nfa);
+          normalCountMatching(IndexNormal, nfa);
             console.timeEnd("normal matching");
             buildLookAheadIndex();
 
@@ -1030,6 +962,9 @@ function stringMatch(){
   var s=inputString.value;
   //fasterMatching(s);
   buildIndex();
+
+
+  /*
   var dfanewTransArray=newTransArray;
   if(dfanewTransArray[0].src==-1)
   {var del=dfanewTransArray.splice(0,1);
@@ -1055,6 +990,8 @@ function stringMatch(){
       else return document.getElementById("matchingResult").innerHTML="false, String doesn't match!"
         +" It failed after: "+s.slice(0,i-1);
 
+
+*/
 }
 var arrDFAFinal=[];
 function getFinalDFA(arrNewIds){
@@ -1174,7 +1111,7 @@ function helper(exp, id, ds){
           b=retVal.b;
        */   
         }
-  else if(exp.value=="a" || exp.value=="b")
+  else if(_.contains(alphabet, exp.value))
     {
       retVal=charExp(exp, ident, nfa);
     }
@@ -1188,13 +1125,9 @@ function helper(exp, id, ds){
             {
               retVal=concat(exp.left,ident,nfa);
              }
-          else if(exp.left.value=='a' ||exp.left.value=='b')
+          else if(_.contains(alphabet, exp.left.value))
             {
                retVal=charExp(exp.left, ident, nfa);
-            }
-            else if(exp.left.value == '0')
-            {
-              retVal = nullCase(exp.left, ident, nfa);
             }
           else if(exp.left.value=='*')
             {
@@ -1207,7 +1140,7 @@ function helper(exp, id, ds){
             {
               retVal=concat(exp.left.left,ident,nfa);
              }
-          else if(exp.left.left.value=='a' ||exp.left.left.value=='b')
+          else if(_.contains(alphabet, exp.left.left.value))
             {
                retVal=charExp(exp.left.left, ident, nfa);
             }
@@ -1226,34 +1159,14 @@ function helper(exp, id, ds){
         }
        
       //when only a char is entered, emptycase, null case need to be considered as well
-      else if(exp.value=='0') 
+      else 
       {
-        retVal = emptyCase(exp, ident, nfa);
+        
       }
-
-    else {}
+    
   return retVal;
 }
 
-function emptyCase(exp, ident, ds)
-{
-  var retVal = new returnValue();
-  retVal.states =[];
-  retVal.trans = [];
-  retVal.b = false;
-  retVal.Ident = ident;
-  return retVal;
-
-}
-function nullCase(exp, ident, ds)
-{
-  var retVal = new returnValue();
-  retVal.states =[];
-  retVal.trans = [];
-  retVal.b = true;
-  retVal.Ident = ident;
-  return retVal;
-}
 function concat(exp, ident, ds)
 {
   var retVal=new returnValue();
@@ -1360,7 +1273,9 @@ function parse(exp)
 //function to convert infix expression to prefix. It takes an expression as an argument.
 
 function infixToPrefix()
-{var expression=inputData.value;
+{
+console.time("LAMatching");
+  var expression=inputData.value;
   var expLength=expression.length;
   for(var i=expLength; i>=0; i--)
     {
@@ -1370,7 +1285,7 @@ function infixToPrefix()
           operatorStack.push(expression[i]);
         }
       //operand
-      else if(expression[i]=='a' ||expression[i]=='b' || expression[i] == '0')
+      else if(_.contains(alphabet,expression[i]))
         {
           outputPrefix=expression[i]+outputPrefix;
          // console.log(outputPrefix);
@@ -1407,7 +1322,7 @@ function infixToPrefix()
       outputPrefix=operatorStack[operatorStack.length-1]+outputPrefix;
       operatorStack.pop();
     }
- // console.log(operatorStack);
+ console.log(outputPrefix);
   parse(outputPrefix);
 }
 
@@ -1433,74 +1348,3 @@ function lowerPrecedence(op1, op2)
 }
 
 
-
-
-</script>
-
-
-</br>
-<p><b>Resultant List: </b> </p>
-<p id="enumerateResult" style="font-weight: bold; font-size: large;"></p>
-</div>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<br></br>
-<br></br>
-
-<div class="union">
-<p id="union">
-Enter any two regular expressions and perform the Union or the Alteration (+) operation on them.
-The resultant FSM is displayed below. 
-</p>
-<div style="float:left; width: 50%; ">
-<label for="regex"><b>Regex 1: </b></label>
-<input type="text" id="regexUnion1" placeholder=" Enter your Regular Expression" size="35">
-<button id="btnUnion1">Convert</button>
-<p id="resultantDisplay1"> NFA 1: </p>
-<p id="resultUnion1"></p>
-<script>
-
-</script>
-</div>
-
-<div style="float:right; width:50%;">
-<label for="regex"><b>Regex 2: </b></label>
-<input type="text" id="regexUnion2" placeholder=" Enter your Regular Expression" size="35">
-<button id="btnUnion2">Convert</button>
-<p id="resultantDisplay2">NFA 2: </p>
-<p id="resultUnion2"></p>
-</div>
-
-<script src="viz.js"></script>
-
-<script src="Underscore.js"></script>
-</div>
-
-</div>
-</body>
-</html>

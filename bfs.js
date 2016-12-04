@@ -1,3 +1,8 @@
+/*The algorithm for converting regular expression to FSM is adopted from the McIlroy's Paper 
+"Functional Pealrs- Enumerating the strings of regular languages". Reference: 
+www.cs.dartmouth.edu/~doug/nfa.ps.gz
+
+*/
 var inputData=document.querySelector("#regex");
 var buttonConvert=document.querySelector("#btnConvert");
 buttonConvert.addEventListener('click', infixToPrefix);
