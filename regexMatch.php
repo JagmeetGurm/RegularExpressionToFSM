@@ -14,6 +14,8 @@ then convert it. Then enter any string and click String Match button to check wh
 accepts the string or not. Regex Matching is done using the Look Ahead Algorithm as proposed in  "Fast Regular Expression Matching Using Dual Glushkov NFA". For further details, check the About section. 
 For example: (a+b)*.(a+b).  '+' represents Union/alteration, 
 '.' represents concatenation operation and '*' represents kleene closure operation( 0 or more).
+To represent 1 or more, use the term and concat it with the star. For example to represent atleast 1 a, 
+use a.a*.
 No space should be used between any symbols of expression.
 <div style="padding-top:20px;">
 <label for="regex" ><b>Regex: </b></label>

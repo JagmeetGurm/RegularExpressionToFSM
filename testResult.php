@@ -43,8 +43,16 @@ $userIdResult=mysqli_query($con, "SELECT `id` FROM `users` WHERE `username`='{$s
 	 while($userId=$userIdResult->fetch_assoc()){
 		$userIdentity=$userId['id'];
 	 }
+	 if($selectedQuiz=='6')
+	 {
+		 
+	$insertTaken="INSERT INTO quiz_taken (user_id, quiz_id, taken)
+values($userIdentity,'$selectedQuiz' , 'no')"; 
+	 }
+	 else{
 	$insertTaken="INSERT INTO quiz_taken (user_id, quiz_id, taken)
 values($userIdentity,'$selectedQuiz' , 'yes')";
+	 }
 if($con->query($insertTaken)==TRUE){
 	
 }

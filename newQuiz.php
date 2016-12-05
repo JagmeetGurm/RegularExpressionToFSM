@@ -96,8 +96,15 @@ document.getElementById('exResult').innerHTML=Viz(exampleResult);
 <?php
 $chosenQuiz=$_SESSION['quiz_no']; 
 echo "<h1 style='padding:5px;'>Quiz Level: ".$chosenQuiz."</h1></br></br>";
-$response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz'");?>
-
+if($chosenQuiz=='6')
+{
+$response=mysqli_query($con, "SELECT * FROM questions ORDER BY RAND() LIMIT 10");
+	
+}
+else{
+$response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz'");
+}
+?>
 <!--dynamically generate questions-->
 <script>var eventListeners = [];</script>
 <form method ='post' id='quiz_form' action="testResult.php" >
