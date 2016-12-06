@@ -34,11 +34,9 @@ include("header.php"); //include auth.php file on all secure pages ?>
 <form id="myForm" action="test.php" method="post">
   <select name="quiz">
     <option value="1">Quiz 1- Easy </option>
-    <option value="2">Quiz 2- Medium- 1</option>
-    <option value="3">Quiz 3- Medium- 2</option>
-    <option value="4">Quiz 4- Difficult- 1</option>
-	<option value="5">Quiz 5- Difficult- 2</option>
-	<option value="6">Random Quiz</option>
+    <option value="2">Quiz 2- Medium</option>
+    <option value="3">Quiz 3- Difficult</option>
+   	<option value="6">Random Quiz</option>
   </select>
   <br><br>
   <input type="Submit" value="Submit" name ="Submit">
