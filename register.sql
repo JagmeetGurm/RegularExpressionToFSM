@@ -1,7 +1,7 @@
 -- phpMyAdmin SQL Dump
 -- version 3.5.2.2
 -- http://www.phpmyadmin.net
---
+--the file is used from "Javed Rehman's website  http://www.allphptricks.com/"
 -- Host: 127.0.0.1
 -- Generation Time: Jul 30, 2015 at 07:57 AM
 -- Server version: 5.5.27

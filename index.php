@@ -21,15 +21,21 @@ include("header.php"); //include auth.php file on all secure pages ?>
 			#ques_form{
 				margin:20px;
 			}
+			#quizAdvice{
+				float: none;
+			}
 		</style>
 </head>
 <body>
 <div class="form">
 
 <p style="float:left; display:block; margin:10px;"><b>Welcome <?php echo $_SESSION['username']; ?>!</b></p>
-<a href="dashboard.php" style="float:left; display:block; margin:10px;">Quiz 1</a>
-<a href="quiz2.php" style="float:left; display:block; margin:10px;">Quiz 2</a>
+
 <a href="logout.php" style="float:left; display:block; margin:10px;">Logout</a>
+<br>
+<br>
+<h4> Select a quiz to continue.</h4>
+<p id="quizAdvice"> Can take random quiz as many times but other quizes only once.</p>
 
 <form id="myForm" action="test.php" method="post">
   <select name="quiz">
@@ -41,10 +47,10 @@ include("header.php"); //include auth.php file on all secure pages ?>
   <br><br>
   <input type="Submit" value="Submit" name ="Submit">
 </form>
-
+</div>
 
 
 <br /><br /><br /><br />
-</div>
+
 </body>
 </html>

@@ -1290,7 +1290,7 @@ function infixToPrefix3()
 	//var exp2=inputData2.value;
 	var expression="(" + exp1 + ")*";
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1328,6 +1328,13 @@ function infixToPrefix3()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)
@@ -1342,7 +1349,7 @@ function infixToPrefix3()
 function infixToPrefix2()
 {var expression=inputData2.value;
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1380,6 +1387,13 @@ function infixToPrefix2()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)
@@ -1395,7 +1409,7 @@ function infixToPrefix2()
 function infixToPrefix()
 {var expression=inputData.value;
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1433,6 +1447,13 @@ function infixToPrefix()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)

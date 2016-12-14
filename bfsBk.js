@@ -1,6 +1,6 @@
 /*The algorithm for converting regular expression to FSM is adopted from the McIlroy's Paper 
 "Functional Pealrs- Enumerating the strings of regular languages". Reference: 
-www.cs.dartmouth.edu/~doug/nfa.ps.gz. 
+www.cs.dartmouth.edu/~doug/nfa.ps.gz
 
 */
 var inputData=document.querySelector("#regex");
@@ -46,23 +46,6 @@ function returnValue(){
   this.b=true;
 }
 
-///////////DFA global variables
-function dfaTransition(){
-  this.src=null;
-  this.a=null;
-  this.b=null;
-}
-var queueStates=[]; //will contain the current state
-var dfaStartStates=[];
-var dfaStates=[]; //will contain all the visited states
-var dfaTransitionStates=[dfaTransition];
-var resultDfa='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
-var arrDFAFinal=[];
-var ids=0;
-var arrayNewIds=[];
-var newTransArray=[];
-//////////////////////////////////
-
 //union of two sets by ordering them
 function union(nfa1, nfa2){
   var unionNFA=[];
@@ -88,26 +71,9 @@ function bp(b,states)
     return states;
   else return [];
 }
-//main function to perform conversion
+
 function r2n(regExp){
-  //reset code
-  operandStack=[];
-operatorStack=[];
- outputPrefix="";
- ident=0;
-  result='digraph { rankdir = LR; none[style=invis];'; 
   
-  //reset dfa
-  queueStates=[]; //will contain the current state
- dfaStartStates=[];
- dfaStates=[]; //will contain all the visited states
- 
- resultDfa='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
- arrDFAFinal=[];
- ids=0;
- arrayNewIds=[];
- newTransArray=[];
- dfaTransitionStates=[dfaTransition];
   var ds={states:[0], trans:[]};
   var returnVal=new returnValue();
   //returns new set of start states, bp value and new ident value
@@ -116,8 +82,12 @@ operatorStack=[];
   returnVal.states=_.union(returnVal.states,oldStartStates );
   printFinal(returnVal);
   nfaToDfa(returnVal);
-  printFinalDFA();
-  
+  //reset code
+ /* operandStack=[];
+operatorStack=[];
+ outputPrefix="";
+ ident=0;
+  result='digraph { rankdir = LR; none[style=invis];'; */
 }
 function printFinal(nfa)
 {
@@ -137,10 +107,18 @@ for(var j=0; j<nfa.trans.length; j++)
 result+=0+"[shape=doublecircle];";
 result+='}';
 //console.log(result);
-document.getElementById("nfaResult").innerHTML=Viz(result);
-result="";
+document.getElementById("nfaResult").innerHTML+=Viz(result);
 }
 
+function dfaTransition(){
+  this.src=null;
+  this.a=null;
+  this.b=null;
+}
+var queueStates=[]; //will contain the current state
+var dfaStartStates=[];
+var dfaStates=[]; //will contain all the visited states
+var dfaTransitionStates=[dfaTransition];
 //firstItem is a state and nfa is final nfa constructed
 function returnDestination(firstItem, nfa, char)
 {
@@ -201,7 +179,6 @@ function nfaToDfa(finalNfa)
           var firstItem=queueStates.splice(0,1);
           console.log("frsit:");
            console.log(firstItem);
-           
            
            var t=new dfaTransition();
                 if(typeof(firstItem)=='number')
@@ -298,12 +275,12 @@ l++;
           console.log(newTransArray);
           console.log("finals:");
           getFinalDFA(arrayNewIds);
-
+printFinalDFA();
          // console.log(stringMatch('ab', newTransArray));
 }
 
 
-
+var resultDfa='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
 function printFinalDFA(){
     resultDfa+="none->"+newTransArray[1].src+ "[label=start];";
 
@@ -322,8 +299,7 @@ function printFinalDFA(){
         }
     resultDfa+='}';
     //console.log(result);
-    document.getElementById("result").innerHTML=Viz(resultDfa);
-	resultDfa="";
+    document.getElementById("result").innerHTML+=Viz(resultDfa);
 }
 
 function returnA(state,dfanewTransArray){
@@ -367,7 +343,7 @@ function stringMatch(){
       else return document.getElementById("matchingResult").innerHTML="false, String doesn't match!"
         +" It failed after: "+s.slice(0,i-1);
 }
-
+var arrDFAFinal=[];
 function getFinalDFA(arrNewIds){
   for(var i=0; i<arrNewIds.length; i++){
     if(arrNewIds[i].final==true){
@@ -376,7 +352,7 @@ function getFinalDFA(arrNewIds){
   }
   console.log(arrDFAFinal);
 }
-
+var ids=0;
 function newId(){
   this.src=null;
   this.id=0;
@@ -390,7 +366,7 @@ if(state[i]==0){
 }
   return false;
 }
-
+var arrayNewIds=[];
 function assignNewId(dfaStates){
 
   for(var i=0; i<dfaStates.length; i++){
@@ -416,7 +392,7 @@ function newTrans(){
   this.bId=[];
   this.final=false;
 }
-
+var newTransArray=[];
 
 function returnId(arrIds, state)
 {if(state==undefined)
@@ -450,7 +426,6 @@ function assignNewTransId(dfaTransitionStates, arrNewIds){
   }
 }
 
-//helper funcion for conversion
 function helper(exp, id, ds){
 //  console.log(exp);
   var x, y;
@@ -702,27 +677,7 @@ function infixToPrefix()
 			  //invalid input
 			  else
 			  {
-			// document.getElementById('errorMsg').innerHTML= "Invalid input! Please enter a valid expression. " 
-				 document.querySelector("#result").innerHTML="Invalid input! Please enter a valid expression.";
-				 document.querySelector("#nfaResult").innerHTML="";
-//reset code
-operandStack=[];
-operatorStack=[];
- outputPrefix="";
- ident=0;
-  result='digraph { rankdir = LR; none[style=invis];'; 
-  
-  //reset dfa
-  queueStates=[]; //will contain the current state
- dfaStartStates=[];
- dfaStates=[]; //will contain all the visited states
- 
- resultDfa='digraph { rankdir = LR; none[style=invis];' //' none->0 [label=start];';
- arrDFAFinal=[];
- ids=0;
- arrayNewIds=[];
- newTransArray=[];
- dfaTransitionStates=[dfaTransition];
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please enter a valid expression. " 
 			     javascript_abort();// return;
 				 
 

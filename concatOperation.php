@@ -73,14 +73,10 @@ performed on regular expressions. So, go head and practice!</p>
 
 </div>
 
-
-
-<br></br>
-
 <div class="union">
 <p id="union">
 Enter any two regular expressions and perform the Concat (.) operation on them.
-The resultant FSM is displayed below. 
+The resultant FSM is displayed below. <b> A machine must have a start and final state to accept any string.</b>
 </p>
 <div style="float:left; width: 50%; ">
 <label for="regex"><b>Regex 1: </b></label>
@@ -88,8 +84,8 @@ The resultant FSM is displayed below.
 <button id="btnUnion1">Convert</button>
 
 <button id="btnPerformUnion" ><b>Concat</b></button>
-
-<p id="resultantDisplay1"> NFA 1: </p>
+<p id="errorMsg"></p>
+<p id="resultantDisplay1"> NFA: </p>
 <p id="resultUnion1"></p>
 
 </div>

@@ -525,207 +525,6 @@ function buildIndex()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-/////////////////************
-function activeIndex(){
-  this.src=-1;
-  this.ch1='~';
-  this.ch2='~';
-  this.d=[];
-}
-function finalIndex(){
-  this.src=-1;
-  this.ch1='~';
-  this.d=[];
-}
-function combineIndex(){
-this.Index=[];
-this.FinalIndex=[];
-}
-function lookAheadIndex()
-{var mycombineIndex=new combineIndex();
-  
-    var nfa = nfaForMatching;
-  for(var i=0; i<nfa.trans.length; i++)
-  {
-          for(var j=0; j<nfa.trans[i].dest.length; j++)
-          {var myfinalIndex=new finalIndex();
-            var myactiveIndex=new activeIndex();
-            myactiveIndex.src=nfa.trans[i].src;
-            myactiveIndex.ch1=nfa.trans[i].ch;
-            for(var k=0; k<nfa.trans.length; k++)
-              {
-                if(nfa.trans[k].src==nfa.trans[i].dest[j])
-                {
-                  myactiveIndex.ch2=nfa.trans[k].ch;
-                  mycombineIndex.Index.push(myactiveIndex);
-                }
-              }
-             
-              myfinalIndex.src=nfa.trans[i].src;
-              myfinalIndex.ch1=nfa.trans[i].ch;
-              mycombineIndex.FinalIndex.push(myfinalIndex);
-          }
-
-
-  }
-              console.log("activeIndexLength: "+mycombineIndex.Index.length);
-              for(var l=0; l<mycombineIndex.Index.length; l++)
-              {console.log("activeIndex src: "+mycombineIndex.Index[l].src);
-              console.log("activeIndex ch1: "+mycombineIndex.Index[l].ch1);
-              console.log("activeIndex ch2: "+mycombineIndex.Index[l].ch2);
-
-              }
-                //console.log("activeIndex: "+mycombineIndex.Index);
-
-                console.log("finalIndexLength: "+mycombineIndex.FinalIndex.length);
-                 for(var m=0; m<mycombineIndex.FinalIndex.length; m++)
-              {console.log("activeIndex src: "+mycombineIndex.FinalIndex[m].src);
-              console.log("activeIndex ch1: "+mycombineIndex.FinalIndex[m].ch1);
-              
-
-            }
-
-}
-
-
-
-//***********************matching 2
-function fasterMatching2(sInputString)
-{
-  var nfa= nfaForMatching;
-  
-var currentActiveTemp=nfaForMatching.states;
-console.log("nfaStartStates: "+currentActiveTemp.length);
-// var currentActiveTemp =[];
-// for(var z=0; z<nfaStartStates.length; z++){
- // currentActiveTemp.push(nfaStartStates[z]);
- //}
- console.log("active temp: "+currentActiveTemp);
- var currentActive=[];
-  for(var m=0; m<nfa.trans.length; m++)
-   {
-      for(var n=0; n<currentActiveTemp.length; n++)
-      {
-        if(nfa.trans[m].src==currentActiveTemp[n])
-        { 
-          currentActive.push(nfa.trans[m]);
-
-        }
-      }
-    }
-    //current active contains all start states
-    //add 0 as a start state
-    if(currentActiveTemp[0]==0){
-      currentActive.push({src:0, ch:'~', dest:[]});
-    }
-    nfa.trans.push({src:0, ch:'~', dest:[]});
-  console.log("currentlength:L "+ currentActive.length);
-console.log("mycurent: "+currentActive[0].ch);
-console.log("mycurent: "+currentActive[0].dest);
-
-//console.log("mycurent: "+currentActive[1].dest[0]);
-//console.log("mycurent: "+currentActive[1].ch);
-
-var matchCount=false;
-  var nextStates = [];
-  console.log("currentActive: "+currentActive);
-  console.log("trans:"+ nfa.trans);
-  var i=0;
-  for(i=0; i<sInputString.length-1; i=i+2)
-  {nextStates=[];
-    for(var j=0; j<currentActive.length; j++)
-    {
-      if(sInputString[i]==currentActive[j].ch)
-      {//matchCount++;
-         for(var k=0; k<currentActive[j].dest.length; k++)
-         {
-           for(var x=0; x<nfa.trans.length; x++)
-           {
-                if(currentActive[j].dest[k]==nfa.trans[x].src && sInputString[i+1]==nfa.trans[x].ch)
-                {
-                    for(var y=0; y<nfa.trans[x].dest.length; y++)
-                     { 
-                         for(var q=0; q<nfa.trans.length; q++)
-                          {
-                                if(nfa.trans[q].src==nfa.trans[x].dest[y])
-                                {
-                 
-                                          var bTemp=true;
-                                          for(w=0; w<nextStates.length; w++)
-                                          {
-                                          if(nextStates[w].src== nfa.trans[q].src)
-                                            { bTemp=false;
-
-                                            }
-                                          }
-                                          if(bTemp)
-                                          {
-                                            nextStates.push(nfa.trans[q]);
-                                          }
-                                 }
-                           }
-                      }
-                 }//if
-             //}
-           } //end for 
-
-         } //enf for 
-
-      } //end if
-
-    }//end for
-   /* if(i=sInputString.length-1 && nextStates[0].src==0 &&nextStates.length==1 )){
-      matchCount=false;
-    }
-    
-   currentActive = nextStates; 
-  }
-  if(i==sInputString.length && currentActive.length>0 && currentActive[0].src==0)
-  {
-    matchCount=true;
-  }
-  if(currentActive.length==0)
-  {
-    matchCount=false;
-  }
-  for(var l=0; l<nextStates.length; l++)
-  {
-    if(nextStates[l].src==0 && matchCount==true) 
-    {
-      console.log("my ans: true");
-      i=nextStates.length;
-    }
-
-  }
-  if(l==nextStates.length){
-    console.log("my ans: false");
-  }
-
-}
-
-*/
-////////******************************
-
-
-
 function printFinal(nfa)
 {//console.log(nfa);
 //state states
@@ -1290,7 +1089,7 @@ function infixToPrefix3()
 	var exp2=inputData2.value;
 	var expression="(" +exp1 + ")"+ "." + "(" + exp2 + ")";
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1328,6 +1127,13 @@ function infixToPrefix3()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)
@@ -1342,7 +1148,7 @@ function infixToPrefix3()
 function infixToPrefix2()
 {var expression=inputData2.value;
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1380,6 +1186,13 @@ function infixToPrefix2()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)
@@ -1395,7 +1208,7 @@ function infixToPrefix2()
 function infixToPrefix()
 {var expression=inputData.value;
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
       //right paranthesis
       if(expression[i]===')')
@@ -1433,6 +1246,13 @@ function infixToPrefix()
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	  else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh the page and enter a valid expression. " 
+			     throw new Error('This is not an error. This is just to abort javascript');
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)

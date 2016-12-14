@@ -1,3 +1,9 @@
+/*The algorithm for  enumerating the strings is refrenced from the McIlroy's Paper 
+"Functional Pealrs- Enumerating the strings of regular languages". Reference: 
+www.cs.dartmouth.edu/~doug/nfa.ps.gz
+
+*/
+
 var inputData=document.querySelector("#regex");
 var buttonConvert=document.querySelector("#btnConvert");
 buttonConvert.addEventListener('click', infixToPrefix);
@@ -83,8 +89,14 @@ function r2n(regExp){
   printFinal(returnVal);
   nfaForMatching=returnVal;
  // nfaToDfa(returnVal);
-  
+ 
   enumA();
+   //reset code
+   operandStack=[];
+  operatorStack=[];
+  outputPrefix="";
+  ident=0;
+  result='digraph { rankdir = LR; none[style=invis];';
 }
 
 
@@ -728,7 +740,7 @@ for(var j=0; j<nfa.trans.length; j++)
 result+=0+"[shape=doublecircle];";
 result+='}';
 //console.log(result);
-document.getElementById("nfaResult").innerHTML+=Viz(result);
+document.getElementById("nfaResult").innerHTML=Viz(result);
 }
 
 function dfaTransition(){

@@ -1,3 +1,8 @@
+/*The algorithm for improved matching has been derived from "Fast Regular Expression Matching using Dual Glushkov" by R. Kurai and team 
+https://www-alg.ist.hokudai.ac.jp/~thomas/TCSTR/tcstr_14_73/tcstr_14_73.pdf
+Accessed on Nov 12, 2016.
+*/
+
 var inputData=document.querySelector("#regex");
 var buttonConvert=document.querySelector("#btnConvert");
 buttonConvert.addEventListener('click', infixToPrefix);
@@ -8,7 +13,7 @@ var stringButton=document.querySelector("#stringMatchButton");
 stringButton.addEventListener('click', stringMatch);
 
 
-var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
 var checkCount=0;
 var Index = {};
 var IndexNormal={};
@@ -74,6 +79,9 @@ function bp(b,states)
 }
 
 function r2n(regExp){
+	Index = {};
+IndexNormal={};
+checkCount=0;
    var ds={states:[0], trans:[]};
   var returnVal=new returnValue();
   //returns new set of start states, bp value and new ident value
@@ -87,229 +95,43 @@ function r2n(regExp){
  console.timeEnd("LAMatching");
   //printFinal(returnVal);
   nfaForMatching=returnVal;
+  buildLookAheadIndex();
  // nfaToDfa(returnVal);
   
   //enumA();
-}
-
-
-
-////////////////////
-///////////////enumeration 
-var Word={
-  enumString:"",
-  enumNfa:[]
-} 
-
-function visit(ArrWord, nfa)
-{
-  var listOfWords=['~'];
-  
-  var listOfStrings=[];
-  
-  for(var k=0; k<ArrWord.length; k++)
-  {
-   listOfStrings.push(ArrWord[k]);
-  }
-
-  while(listOfStrings.length>0 && listOfWords[listOfWords.length-1].length<5)
-  { 
-  //console.log("lsitstring size: "+listOfStrings.length);
-
-   var firstElement=listOfStrings[0];
-   //console.log("first element: "+firstElement.enumNfa);
-    listOfStrings.splice(0,1);
-        if(_.contains(firstElement.enumNfa, 0))
-        {listOfWords.push(firstElement.enumString);
-
-        }
-               var ret= grp(firstElement.enumNfa, nfa);
-
-               for(var i=0; i<ret.length; i++)
-               {
-                var t=firstElement.enumString + ret[i].enumString;
-                ret[i].enumString=t;
-
-                listOfStrings.push(ret[i]);
-
-               }
-  }
-  listOfWords.sort();
-  //sort according to length
-  listOfWords.sort(function(a,b){
-    return a.length - b.length || a.localeCompare(b);;
-  });
-//remove duplicates
-_.uniq(listOfWords);
-  console.log("final string llist: "+ listOfWords);
-var myNewList=[];
- for(var j=0; j<listOfWords.length; j++)
- {
-  if(listOfWords[j].length==4){
-myNewList.push(listOfWords[j]);
-  }
-  }
-  console.log("my new list: "+myNewList);
+  //reset code
+  operandStack=[];
+operatorStack=[];
+ outputPrefix="";
+ ident=0;
  
- 
-
-}
-//first element's list of start states
-function grp(eNfa, nfa)
-{var listWord=[];
-  
-    
-    for(var i=0; i<eNfa.length; i++)
-    {
-      for(var j=0; j<nfa.trans.length; j++)
-      {
-    
-        if(eNfa[i]==nfa.trans[j].src)
-        {
-          listWord.push({enumString: nfa.trans[j].ch, enumNfa:nfa.trans[j].dest});
-        
-
-        }
-      }
-    }
-     // console.log("listword size: "+ listWord.length);
-      return listWord;  
-    
-}
-
-function enumA(){
-  var nfa=nfaForMatching;
-  
-  var enumNfaStartStates= [];
-  for(var i=0; i<nfa.states.length; i++)
-  {
-   enumNfaStartStates.push(nfa.states[i]);
-  }
-  
-      var w={enumString: "", enumNfa: enumNfaStartStates};
- var retList=visit([w], nfa);
-  
 }
 
 
-//***********************************//
-function fasterMatching(sInputString)
-{buildLookAheadIndex();
-  var nfa= nfaForMatching;
-  
-var currentActiveTemp=nfaForMatching.states;
-console.log("nfaStartStates: "+currentActiveTemp.length);
-// var currentActiveTemp =[];
-// for(var z=0; z<nfaStartStates.length; z++){
- // currentActiveTemp.push(nfaStartStates[z]);
- //}
- console.log("active temp: "+currentActiveTemp);
- var currentActive=[];
-  for(var m=0; m<nfa.trans.length; m++)
-   {
-      for(var n=0; n<currentActiveTemp.length; n++)
-      {
-        if(nfa.trans[m].src==currentActiveTemp[n])
-        { 
-          currentActive.push(nfa.trans[m]);
 
-        }
-      }
-    }
-    //current active contains all start states
-    //add 0 as a start state
-    if(currentActiveTemp[0]==0){
-      currentActive.push({src:0, ch:'~', dest:[]});
-    }
-    nfa.trans.push({src:0, ch:'~', dest:[]});
-  console.log("currentlength:L "+ currentActive.length);
-console.log("mycurent: "+currentActive[0].ch);
-console.log("mycurent: "+currentActive[0].dest);
-
-//console.log("mycurent: "+currentActive[1].dest[0]);
-//console.log("mycurent: "+currentActive[1].ch);
-
-var matchCount=true;
-  var nextStates = [];
-  console.log("currentActive: "+currentActive);
-  console.log("trans:"+ nfa.trans);
-  for(var i=0; i<sInputString.length; i=i+1)
-  {nextStates=[];
-    for(var j=0; j<currentActive.length; j++)
-    {
-      if(sInputString[i]==currentActive[j].ch)
-      {//matchCount++;
-         for(var k=0; k<currentActive[j].dest.length; k++)
-         {
-           for(var x=0; x<nfa.trans.length; x++)
-           {
-                if(currentActive[j].dest[k]==nfa.trans[x].src )//&& sInputString[i+1]==nfa.trans[x].ch)
-                {
-               // for(var y=0; y<nfa.trans[x].dest.length; y++)
-                 //{
-                  var bTemp=true;
-                  for(w=0; w<nextStates.length; w++)
-                  {
-                  if(nextStates[w].src== nfa.trans[x].src)
-                    {bTemp=false;
-
-                    }
-                  }
-                  if(bTemp)
-                  {
-                    nextStates.push(nfa.trans[x]);
-                  }
-              }
-             //}
-           }
-
-         }
-
-      }
-
-    }
-    if(nextStates.length==0 ||(i<sInputString.length-1 && nextStates[0].src==0 &&nextStates.length==1 )){
-      matchCount=false;
-    }
-   currentActive = nextStates; 
-  }
-  for(var l=0; l<nextStates.length; l++)
-  { var tempResult=false;
-    if(nextStates[l].src==0 && matchCount==true) 
-    {tempResult=true;
-      document.querySelector("#fasterMatch").innerHTML=true;
-      console.log("my ans: true");
-      i=nextStates.length;
-    }
-
-  }
-  if(l==nextStates.length && tempResult===false){
-          document.querySelector("#fasterMatch").innerHTML=false;
-
-    console.log("my ans: false");
-  }
-
-}
 var myCombineIndex={
   myIndex:[],
   myFinalIndex:[]
 };
 
+
+
 /////////////////this is the faster verison
-function lookAheadCount(nfa, testCombineIndex)
+function lookAheadCount()
 { var testString=inputString.value;//  var s=inputString.value; 
   var localCombineIndex={
     localIndex:[],
     localFinalIndex:[]
 
     };
-localCombineIndex.localIndex=testCombineIndex.myIndex;
+	var nfa=nfaForMatching;
+localCombineIndex.localIndex=myCombineIndex.myIndex;
 //localCombineIndex.myFinalIndex=testCombineIndex.myFinalIndex;
     var CurrentActive=[];
     var NextActive=[];
     var MatchCount=0;
     var temp=[];
-   
+   var checkString=testString;
     CurrentActive=_.union(CurrentActive, nfa.states);
     for(var i=0; i<testString.length-1; i=i+1)
     { for(var j=0; j<CurrentActive.length; j++)
@@ -329,8 +151,7 @@ localCombineIndex.localIndex=testCombineIndex.myIndex;
       {
         MatchCount = MatchCount+1;
       }
-
-      
+      console.log("match result"+ testString.substring(0, MatchCount));
       CurrentActive=NextActive;
      // console.log("count: "+MatchCount);
       NextActive=[];
@@ -360,8 +181,11 @@ localCombineIndex.localIndex=testCombineIndex.myIndex;
     ///Print final value: 
 	if(bValue==true)
 	resultDisplay.innerHTML="Matching Result: " + bValue + ". The expression matched the string.";
-else 	resultDisplay.innerHTML="Matching Result: " + bValue + ". The expression didn't match the string.";
+else 
+{	resultDisplay.innerHTML="Matching Result: " + bValue + ". The expression didn't match the string.";
+//resultDisplay.innerHTML+="it failed after "+checkString.substring(0, MatchCount);
 
+}
 console.log("Match or not: "+bValue);
 checkCount++;
 }
@@ -373,7 +197,7 @@ function buildLookAheadIndex()
 { console.time("concatenation");
 
   var nfa= nfaForMatching;
-  //var Index = {};
+   //Index = {};
   var FinalIndex ={};
   if(checkCount==0)
   {
@@ -381,18 +205,18 @@ function buildLookAheadIndex()
   {
       var s=nfa.trans[i].src;
       if(s in Index==false)
-      {
+     {
         Index[s]={};
        // FinalIndex[s]={};
       }
 
-            for(var j=0; j<26; j++)
+            for(var j=0; j<alphabet.length; j++)
             {
               var char1=alphabet[j];
               Index[s][char1]={};
          //     FinalIndex[s][char1]=[];
 
-                    for(var k=0; k<2; k++)
+                    for(var k=0; k<alphabet.length; k++)
                     {
                       var char2 = alphabet[k];
                       Index[s][char1][char2]=[];
@@ -415,21 +239,14 @@ _.union(Index[nfa.trans[l].src][nfa.trans[l].ch][nfa.trans[n].ch], [nfa.trans[l]
           }
         }
       }
-  /*    for(var o=0; o<nfa.trans[l].dest.length; o++)
-      {
-     if(nfa.trans[l].dest[o]!=0)
-      {
-        FinalIndex[nfa.trans[l].src][nfa.trans[l].ch]=_.union(FinalIndex[nfa.trans[l].src][nfa.trans[l].ch], nfa.trans[l].dest[0]);
-      } 
-    }
-    */
+ 
     }
 
 }
 myCombineIndex.myIndex=Index;
 //myCombineIndex.myFinalIndex=FinalIndex;
-lookAheadCount(nfa, myCombineIndex);
-console.timeEnd("concatenation");
+//lookAheadCount(nfa, myCombineIndex);
+//console.timeEnd("concatenation");
 
 }
 
@@ -491,7 +308,7 @@ function buildIndex()
   console.time("normal matching");
 
   var nfa= nfaForMatching;
-  //var IndexNormal = {};
+ //  IndexNormal = {};
   if(checkCount==0)
   {
   for(var i=0; i<nfa.trans.length; i++)
@@ -521,213 +338,6 @@ function buildIndex()
             buildLookAheadIndex();
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-/////////////////************
-function activeIndex(){
-  this.src=-1;
-  this.ch1='~';
-  this.ch2='~';
-  this.d=[];
-}
-function finalIndex(){
-  this.src=-1;
-  this.ch1='~';
-  this.d=[];
-}
-function combineIndex(){
-this.Index=[];
-this.FinalIndex=[];
-}
-function lookAheadIndex()
-{var mycombineIndex=new combineIndex();
-  
-    var nfa = nfaForMatching;
-  for(var i=0; i<nfa.trans.length; i++)
-  {
-          for(var j=0; j<nfa.trans[i].dest.length; j++)
-          {var myfinalIndex=new finalIndex();
-            var myactiveIndex=new activeIndex();
-            myactiveIndex.src=nfa.trans[i].src;
-            myactiveIndex.ch1=nfa.trans[i].ch;
-            for(var k=0; k<nfa.trans.length; k++)
-              {
-                if(nfa.trans[k].src==nfa.trans[i].dest[j])
-                {
-                  myactiveIndex.ch2=nfa.trans[k].ch;
-                  mycombineIndex.Index.push(myactiveIndex);
-                }
-              }
-             
-              myfinalIndex.src=nfa.trans[i].src;
-              myfinalIndex.ch1=nfa.trans[i].ch;
-              mycombineIndex.FinalIndex.push(myfinalIndex);
-          }
-
-
-  }
-              console.log("activeIndexLength: "+mycombineIndex.Index.length);
-              for(var l=0; l<mycombineIndex.Index.length; l++)
-              {console.log("activeIndex src: "+mycombineIndex.Index[l].src);
-              console.log("activeIndex ch1: "+mycombineIndex.Index[l].ch1);
-              console.log("activeIndex ch2: "+mycombineIndex.Index[l].ch2);
-
-              }
-                //console.log("activeIndex: "+mycombineIndex.Index);
-
-                console.log("finalIndexLength: "+mycombineIndex.FinalIndex.length);
-                 for(var m=0; m<mycombineIndex.FinalIndex.length; m++)
-              {console.log("activeIndex src: "+mycombineIndex.FinalIndex[m].src);
-              console.log("activeIndex ch1: "+mycombineIndex.FinalIndex[m].ch1);
-              
-
-            }
-
-}
-
-
-
-//***********************matching 2
-function fasterMatching2(sInputString)
-{
-  var nfa= nfaForMatching;
-  
-var currentActiveTemp=nfaForMatching.states;
-console.log("nfaStartStates: "+currentActiveTemp.length);
-// var currentActiveTemp =[];
-// for(var z=0; z<nfaStartStates.length; z++){
- // currentActiveTemp.push(nfaStartStates[z]);
- //}
- console.log("active temp: "+currentActiveTemp);
- var currentActive=[];
-  for(var m=0; m<nfa.trans.length; m++)
-   {
-      for(var n=0; n<currentActiveTemp.length; n++)
-      {
-        if(nfa.trans[m].src==currentActiveTemp[n])
-        { 
-          currentActive.push(nfa.trans[m]);
-
-        }
-      }
-    }
-    //current active contains all start states
-    //add 0 as a start state
-    if(currentActiveTemp[0]==0){
-      currentActive.push({src:0, ch:'~', dest:[]});
-    }
-    nfa.trans.push({src:0, ch:'~', dest:[]});
-  console.log("currentlength:L "+ currentActive.length);
-console.log("mycurent: "+currentActive[0].ch);
-console.log("mycurent: "+currentActive[0].dest);
-
-//console.log("mycurent: "+currentActive[1].dest[0]);
-//console.log("mycurent: "+currentActive[1].ch);
-
-var matchCount=false;
-  var nextStates = [];
-  console.log("currentActive: "+currentActive);
-  console.log("trans:"+ nfa.trans);
-  var i=0;
-  for(i=0; i<sInputString.length-1; i=i+2)
-  {nextStates=[];
-    for(var j=0; j<currentActive.length; j++)
-    {
-      if(sInputString[i]==currentActive[j].ch)
-      {//matchCount++;
-         for(var k=0; k<currentActive[j].dest.length; k++)
-         {
-           for(var x=0; x<nfa.trans.length; x++)
-           {
-                if(currentActive[j].dest[k]==nfa.trans[x].src && sInputString[i+1]==nfa.trans[x].ch)
-                {
-                    for(var y=0; y<nfa.trans[x].dest.length; y++)
-                     { 
-                         for(var q=0; q<nfa.trans.length; q++)
-                          {
-                                if(nfa.trans[q].src==nfa.trans[x].dest[y])
-                                {
-                 
-                                          var bTemp=true;
-                                          for(w=0; w<nextStates.length; w++)
-                                          {
-                                          if(nextStates[w].src== nfa.trans[q].src)
-                                            { bTemp=false;
-
-                                            }
-                                          }
-                                          if(bTemp)
-                                          {
-                                            nextStates.push(nfa.trans[q]);
-                                          }
-                                 }
-                           }
-                      }
-                 }//if
-             //}
-           } //end for 
-
-         } //enf for 
-
-      } //end if
-
-    }//end for
-   /* if(i=sInputString.length-1 && nextStates[0].src==0 &&nextStates.length==1 )){
-      matchCount=false;
-    }
-    
-   currentActive = nextStates; 
-  }
-  if(i==sInputString.length && currentActive.length>0 && currentActive[0].src==0)
-  {
-    matchCount=true;
-  }
-  if(currentActive.length==0)
-  {
-    matchCount=false;
-  }
-  for(var l=0; l<nextStates.length; l++)
-  {
-    if(nextStates[l].src==0 && matchCount==true) 
-    {
-      console.log("my ans: true");
-      i=nextStates.length;
-    }
-
-  }
-  if(l==nextStates.length){
-    console.log("my ans: false");
-  }
-
-}
-
-*/
-////////******************************
 
 
 
@@ -961,37 +571,9 @@ for(var i=0; i<dfanewTransArray.length; i++){
 function stringMatch(){
   var s=inputString.value;
   //fasterMatching(s);
-  buildIndex();
+ lookAheadCount();
 
 
-  /*
-  var dfanewTransArray=newTransArray;
-  if(dfanewTransArray[0].src==-1)
-  {var del=dfanewTransArray.splice(0,1);
-  }
-  var currentStateSrc=dfanewTransArray[0].src;
-
-    for(var i=0; i<s.length; i++){
-        if(s[i]=='a'){
-          currentStateSrc=returnA(currentStateSrc,dfanewTransArray);
-        }
-        else if(s[i]=='b'){
-          currentStateSrc=returnB(currentStateSrc,dfanewTransArray);
-        }
-        else{return document.getElementById("matchingResult").innerHTML="false, String doesn't match!"
-          +" It failed after: "+s.slice(0,i);}
-        if(currentStateSrc==-1){
-          return document.getElementById("matchingResult").innerHTML="false, String doesn't match!"
-          +" It failed after: "+s.slice(0,i);
-        }
-    }
-    if(_.contains(arrDFAFinal,currentStateSrc))
-      return document.getElementById("matchingResult").innerHTML="True, the string matches!";
-      else return document.getElementById("matchingResult").innerHTML="false, String doesn't match!"
-        +" It failed after: "+s.slice(0,i-1);
-
-
-*/
 }
 var arrDFAFinal=[];
 function getFinalDFA(arrNewIds){
@@ -1075,25 +657,7 @@ function assignNewTransId(dfaTransitionStates, arrNewIds){
     newTransArray.push(n);
   }
 }
-/*function print(finalNFA)
-{console.log(finalNFA);
-  var queue=finalNFA[0].nfa;
-var j=2;
-  //console.log(firstItem);
-  while(queue.length>0)
-    { var firstItem=queue.splice(0,1);
-     console.log(firstItem);
-     for(var i=0; i<firstItem.length; i++){
-      console.log(firstItem[i].Ident+ " "+ firstItem[i].ch+ "->"+"");
-     
-         queue.push(firstItem[i].nfa[0]);
-     
-     } 
-      
-    }
-    
-}
-*/
+
 function helper(exp, id, ds){
 //  console.log(exp);
   var x, y;
@@ -1277,8 +841,11 @@ function infixToPrefix()
 console.time("LAMatching");
   var expression=inputData.value;
   var expLength=expression.length;
-  for(var i=expLength; i>=0; i--)
+  for(var i=expLength-1; i>=0; i--)
     {
+		if(expression[i]==' '){
+			continue;
+		}
       //right paranthesis
       if(expression[i]===')')
         {
@@ -1315,6 +882,14 @@ console.time("LAMatching");
         operatorStack.pop();
      //   console.log(outputPrefix);
       }
+	   else
+			  {
+				 document.getElementById('errorMsg').innerHTML= "Invalid input! Please refresh page and enter a valid expression. " 
+				 resultDisplay.innerHTML="";
+			     javascript_abort();// return;
+				 
+
+			  }
     }
   //pop stack while not empty to starting of prefix string
   while(operatorStack.length>0)
@@ -1325,7 +900,10 @@ console.time("LAMatching");
  console.log(outputPrefix);
   parse(outputPrefix);
 }
-
+function javascript_abort()
+{
+   throw new Error('This is not an error. This is just to abort javascript');
+}
 /*checks if current token has lower precedence than top of stack and returns true else false
 It receives two arguments. First, op1 takes the current token being read, and second, op2
 takes the top element of stack. Returns a bool value-true is op1 has lower precedence else

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<!-- the code for the navigation bar has been taken from: "w3schools.com" -->
+<!-- The code for the navigation bar including its corresponding CSS code has been taken from: CSS Navigton Bar, "w3schools.com". Accessed on Nov 5, 2016 -->
 
 <head>
   <meta charset="utf-8">
@@ -60,7 +60,8 @@ For more information, please visit the About Section. </p>
 <h2>Regex To FSM</h2>
 <p>Simply enter a regular expression over domain {a,b} to perform the conversion and get Non-Deterministic and its equivalent Deterministic Machine. For example: (a+b)*. For nil/empty string, use 0 and for epsilon string use 0*. '+' represents Union/alteration, 
 '.' represents concatenation operation and '*' represents kleene closure operation( 0 or more).
-No space should be used between any symbols of expression.</p>
+No space should be used between any symbols of expression. An example of valid concat regex would be: "(a+b)*.(a.b+b.a).(a+b)*".<b> A machine must have a start and final state to 
+accept any string. </b></p>
 <label for="regex"><b>Regex: </b></label>
 <input type="text" id="regex" placeholder=" Enter your Regular Expression" size="35">
 
@@ -69,7 +70,7 @@ No space should be used between any symbols of expression.</p>
 <p></p>
 </div>
 
-<div style="float:right; width: 30%; ">
+<div style="float:right; width: 30%;  ">
 <h2>String Matching</h2>
 <p>Enter the string to check if the generated FSM accepts it or not.</p>
 <label for="matchString"><b>String To Match: </b></label>
@@ -80,7 +81,7 @@ No space should be used between any symbols of expression.</p>
 <p id="matchingResult"></p>
 </div>
 <div style="clear: both">
-
+<p id="errorMsg"></p>
 <p><b>Nfa:</b></p>
 <p id="nfaResult"></p>
 <p><b>Dfa:</b></p>

@@ -91,32 +91,7 @@ document.getElementById('exResult').innerHTML=Viz(exampleResult);
 Start state will always have a start arrow and final state will have double circle and 0 id. </p>
 </div>
 <?php
-$currentUser=$_SESSION['username'];
-$chosenQuiz=$_SESSION['quiz_no'];
-$selectedQuiz=$chosenQuiz;
-$sql=mysqli_query($con, "SELECT id FROM `users` where `username`='$currentUser'"); 
-	//if($con->query($sql)==TRUE){
-      while($currentId=$sql->fetch_assoc()){
-		$currentUserId=$currentId['id'];
-	 }
-	
-	$sql2= mysqli_query($con,"SELECT taken FROM quiz_taken WHERE user_id=$currentUserId && quiz_id='$selectedQuiz' LIMIT 1");
-
-	if(mysqli_num_rows($sql2) > 0)
-	{
-		while($val=$sql2->fetch_assoc())
-		 {
-		
-		$takenValue=$val['taken'];
-		
-		
-				if($takenValue=='yes')
-				{
-					header("location: index.php");
-					return;
-				}
-		 }
-	}
+$chosenQuiz=$_SESSION['quiz_no']; 
 
 //specify quiz level
 if($chosenQuiz=='6'){
@@ -129,17 +104,17 @@ echo "<h1 style='padding:5px;'>Quiz Level: ".$chosenQuiz."</h1></br></br>";
 //for random quiz, take random questions, quiz level 6 specifies random quiz
 if($chosenQuiz=='6')
 {
-  //$response=mysqli_query($con, "SELECT * FROM questions WHERE quiz_no='1' OR quiz_no='2' ORDER BY RAND() LIMIT 10");
-	header("location: newQuizBk.php");
+$response=mysqli_query($con, "SELECT * FROM questions ORDER BY RAND() LIMIT 10");
+	
 }
 else{
-$response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz' LIMIT 10");
+$response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz'");
 }
 ?>
 
 <!--dynamically generate questions-->
 <script>var eventListeners = [];</script>
-<form method ='post' id='quiz_form' action="displayResult.php" >
+<form method ='post' id='quiz_form' action="testResult.php" >
 <div id='ques_form' >
 <?php 
 
@@ -186,7 +161,7 @@ while($result=mysqli_fetch_array($response, MYSQLI_ASSOC))
 		
 		<div id="question_<?php echo $i;?>" class='questions'>
         <h2 id="question_<?php echo $i;?>" required><?php echo $i.".".$result['ques_name'];?></h2>
-	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>"  style="font-size:10pt;height:220px;width:600px;"  ></textarea>
+	    <textarea id="txt_<?php echo $result['ques_id'];?>" type="text" name="ques_<?php echo $result['ques_id'];?>"  style="font-size:10pt;height:220px;width:600px;" ></textarea>
 		</br>
 	    <button id="btnclick_<?php echo $result['ques_id'];?>" type="button">Create FSM</button>
 		
