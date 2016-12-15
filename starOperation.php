@@ -74,7 +74,7 @@ performed on regular expressions. So, go head and practice!</p>
 
 <div class="union">
 <p id="union">
-Enter any regular expression and perform the star or Kleene closure (*) operation on it.
+Enter any regular expression and perform the star or Kleene closure (*) operation on it. First enter Regex, convert it and then click star.
 The resultant FSM is displayed below. <b> A machine must have a start and final state to accept any string.</b>
 </p>
 <div style="float:left; width: 50%; ">

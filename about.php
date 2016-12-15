@@ -19,7 +19,7 @@ which always results in m+1 states for m symbols. The DFA conversion is done usi
 The website can be navigated to perform operations to operations like union, concatenation and star on 
 regular expressions. The Quiz section requires registration a free account and then taking different levels
 of quiz to test the knowledge gained from conversion of expressions and other sections of the website. 
-The Regex Matching section performs regex matching on a bigger domain [a-z] using Look Ahead Algorithm as 
+The Regex Matching section performs regex matching on a bigger domain [a-z, A-Z] using Look Ahead Algorithm as 
 proposed in the  "Fast Regular Expression Matching Using Dual Glushkov NFA" paper by R. Kurai, et.al. 
 </p>
 </div>

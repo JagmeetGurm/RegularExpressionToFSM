@@ -202,7 +202,7 @@ function visit(ArrWord, nfa)
    listOfStrings.push(ArrWord[k]);
   }
 
-  while(listOfStrings.length>0 && listOfWords.length<20)
+  while(listOfStrings.length>0 && listOfWords.length<50)
   { 
   //console.log("lsitstring size: "+listOfStrings.length);
 
@@ -223,6 +223,7 @@ function visit(ArrWord, nfa)
                 listOfStrings.push(ret[i]);
 
                }
+			   listOfWords=_.uniq(listOfWords);
   }
   listOfWords.sort();
   //sort according to length
@@ -234,7 +235,7 @@ listOfWords=_.uniq(listOfWords);
   console.log("final string list: "+ listOfWords);
 
  
- document.getElementById("enumerateResult").innerHTML = listOfWords;
+ document.getElementById("enumerateResult").innerHTML = listOfWords.splice(0,20);
 
 }
 //first element's list of start states

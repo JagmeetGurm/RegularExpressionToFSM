@@ -75,7 +75,7 @@ performed on regular expressions. So, go head and practice!</p>
 
 <div class="union">
 <p id="union">
-Enter any two regular expressions and perform the Concat (.) operation on them.
+Enter any two regular expressions and perform the Concat (.) operation on them. First enter Regex1, convert it, then Regex2, convert it and finally click Concat.
 The resultant FSM is displayed below. <b> A machine must have a start and final state to accept any string.</b>
 </p>
 <div style="float:left; width: 50%; ">

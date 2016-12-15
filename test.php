@@ -144,7 +144,7 @@ function visit(ArrWord, nfa)
   {
    listOfStrings.push(ArrWord[k]);
   }
-  while(listOfStrings.length>0 && listOfWords.length!=50)
+  while(listOfStrings.length>0 && listOfWords.length!=80)
   { 
   
    var firstElement=listOfStrings[0];
@@ -159,7 +159,9 @@ function visit(ArrWord, nfa)
       var t=firstElement.enumString + ret[i].enumString;
       ret[i].enumString=t;
       listOfStrings.push(ret[i]);
-     }
+  
+  }
+   listOfWords=_.uniq(listOfWords);
   }
   listOfWords.sort();
   //sort according to length
@@ -169,7 +171,7 @@ function visit(ArrWord, nfa)
 //remove duplicates
 listOfWords=_.uniq(listOfWords);
 
-return listOfWords;
+return listOfWords.splice(0,50);
 }
 //first element's list of start states
 function grp(eNfa, nfa)

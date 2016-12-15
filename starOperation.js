@@ -1291,7 +1291,9 @@ function infixToPrefix3()
 	var expression="(" + exp1 + ")*";
   var expLength=expression.length;
   for(var i=expLength-1; i>=0; i--)
-    {
+    {if(expression[i]==' '){
+			continue;
+		}
       //right paranthesis
       if(expression[i]===')')
         {
@@ -1350,7 +1352,9 @@ function infixToPrefix2()
 {var expression=inputData2.value;
   var expLength=expression.length;
   for(var i=expLength-1; i>=0; i--)
-    {
+    {if(expression[i]==' '){
+			continue;
+		}
       //right paranthesis
       if(expression[i]===')')
         {
@@ -1410,7 +1414,9 @@ function infixToPrefix()
 {var expression=inputData.value;
   var expLength=expression.length;
   for(var i=expLength-1; i>=0; i--)
-    {
+    {if(expression[i]==' '){
+			continue;
+		}
       //right paranthesis
       if(expression[i]===')')
         {

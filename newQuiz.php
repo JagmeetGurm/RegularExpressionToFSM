@@ -130,7 +130,7 @@ echo "<h1 style='padding:5px;'>Quiz Level: ".$chosenQuiz."</h1></br></br>";
 if($chosenQuiz=='6')
 {
   //$response=mysqli_query($con, "SELECT * FROM questions WHERE quiz_no='1' OR quiz_no='2' ORDER BY RAND() LIMIT 10");
-	header("location: newQuizBk.php");
+	header("location: random.php");
 }
 else{
 $response=mysqli_query($con, "SELECT * FROM questions where quiz_no ='$chosenQuiz' LIMIT 10");

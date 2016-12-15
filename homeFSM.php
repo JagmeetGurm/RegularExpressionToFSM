@@ -54,13 +54,14 @@ color:white;
 </ul>
 <div style="width: 100%; ">
 
-<p>Regular Expression To FSM provides a comprehensive web tool related to finite automata. Practice conversion of  Regular Expression to Non-Deterministic Automata and Deterministic Automata. Further, can also perform string matchin on the generating Finite Automata. Then, test your knowledge by going to the quiz section. The conversion is done using McIlroy's Backward Construction Algorithm. 
+<p>Regular Expression To FSM provides a comprehensive web tool related to finite automata. Practice conversion of  Regular Expression to Non-Deterministic Automata and Deterministic Automata. Further, can also perform string matching on the generating Finite Automata. Then, test your knowledge by going to the quiz section. The conversion is done using McIlroy's Backward Construction Algorithm. 
 For more information, please visit the About Section. </p>
 <div style="float:left; width: 70%; "> 
 <h2>Regex To FSM</h2>
-<p>Simply enter a regular expression over domain {a,b} to perform the conversion and get Non-Deterministic and its equivalent Deterministic Machine. For example: (a+b)*. For nil/empty string, use 0 and for epsilon string use 0*. '+' represents Union/alteration, 
+<p>Simply enter a regular expression over domain {a,b} to perform the conversion and get Non-Deterministic and its equivalent Deterministic Machine. For example: (a+b)*. 
+For epsilon string use 0*. '+' represents Union/alteration, 
 '.' represents concatenation operation and '*' represents kleene closure operation( 0 or more).
-No space should be used between any symbols of expression. An example of valid concat regex would be: "(a+b)*.(a.b+b.a).(a+b)*".<b> A machine must have a start and final state to 
+An example of valid concat regex would be: "(a+b)*.(a.b+b.a).(a+b)*".<b> A machine must have a start and final state to 
 accept any string. </b></p>
 <label for="regex"><b>Regex: </b></label>
 <input type="text" id="regex" placeholder=" Enter your Regular Expression" size="35">
